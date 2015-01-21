@@ -38,19 +38,36 @@ function armUp(dir) {
     var arm = '#person-arm-' + dir;
     changeLabel(dir);
     if (dir == 'left') {
-        moveBarIndicatorTo(0);
         $(arm).addClass('move-arm-left');
         setTimeout( function () {
             $(arm).removeClass('move-arm-left');
         }, 2000);
     } else if (dir == 'right') {
-        moveBarIndicatorTo(100);
         $(arm).addClass('move-arm-right');
         setTimeout( function () {
             $(arm).removeClass('move-arm-right');
         }, 2000);
+    }
+}
+
+function emitCommand(val, dir, thresh) {
+    moveBarIndicatorTo((val+1)*50);
+    if (dir == 'pause') {
+        changeLabel();
+        changeContainerVisibility('person', 'hide');
+        changeContainerVisibility('bar', 'hide');
     } else {
-        moveBarIndicatorTo(50);    
+        changeContainerVisibility('person', 'show');
+        changeContainerVisibility('bar', 'show');
+        if (dir == 'left') {
+            armUp('left');
+            changeLabel('left');
+        } else if (dir == 'right') {
+            armUp('right');
+            changeLabel('right');
+        } else if (dir == 'baseline') {
+            changeLabel('baseline');
+        }
     }
 }
 
@@ -59,6 +76,15 @@ function changeLabel(label) {
         $('#command-label').text('');    
     } else {
         $('#command-label').text(label);    
+    }
+}
+
+function changeContainerVisibility(name, action) {
+    var id = '#' + name + '-container';
+    if (action == 'show' && $(id).css('display') == 'none') {
+        $(id).fadeIn(300);
+    } else if (action == 'hide' && $(id).css('display') != 'none') {
+        $(id).fadeOut(300);
     }
 }
 

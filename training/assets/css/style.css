@@ -9,8 +9,6 @@ body {
     height: 100%;
 }
 
-
-
 .panel {
     position: absolute;
     height: 100%;
@@ -260,7 +258,7 @@ body {
     position: absolute;
     width: 100%;
     text-align: center;
-    bottom: 100px;
+    bottom: 20px;
 }
 
 
@@ -276,8 +274,8 @@ body {
 #command-label {
     font-size: 80px;
     text-align: center;
-    height: 200px;
-    line-height: 200px;
+    height: 100px;
+    line-height: 100px;
 }
 
 #estimate-bar {
@@ -292,15 +290,22 @@ body {
 #bar-container {
     position: absolute;
     width: 100%;
+    bottom: 150px;
 }
 
 #estimate-indicator {
     width: 25px;
     height: 50px;
-    left: 475px;
+    left: calc(475px/2);
     margin-top: -12.5px;
     background: rgba(255,0,0,0.3);
     position: absolute;
     transition: 0.5s;
     -webkit-transition: 0.5s;
+}
+
+#command-container {
+    position: absolute;
+    top: 0px;
+    width: 100%;
 }

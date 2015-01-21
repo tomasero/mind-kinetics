@@ -5,6 +5,7 @@ var HOST = '127.0.0.1';
 var dgram = require('dgram');
 var server = dgram.createSocket('udp4');
 
+
 var socket = null;
 
 server.on('listening', function () {
@@ -14,7 +15,7 @@ server.on('listening', function () {
 
 server.on('message', function (message, remote) {
     console.log(remote.address + ':' + remote.port +' - ' + message);
-    socket.emit('commands', { data: message });
+    socket.emit('commands', { data: message.toString('utf-8') });
 });
 
 server.bind(PORT, HOST);
