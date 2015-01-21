@@ -1,0 +1,65 @@
+<html>
+    
+<head>    
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <link href="http://fonts.googleapis.com/css?family=Lato:100,300,400,500,700" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="/js/script.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io('http://localhost');
+  socket.on('commands', function (data) {
+    console.log(data);
+    armUp(data['data']);
+  });
+</script>
+</head>
+<body>
+    <div id="panel-container">
+        <div class="panel" id="intro-panel">
+            <div id="intro-container">
+                <div id="intro-title">Mind Racer</div>
+                <div id="intro-button">Train</div>
+            </div>
+        </div>
+        <div class="panel" id="main-panel">
+            <div id="command-container">
+                <div id="command-label"></div>
+            </div>
+            <div id="person-container">
+                <div class="person-arm" id="person-arm-left">
+                    <div class="person-hand">
+                        <div class="person-finger" id="person-finger-1"></div>
+                        <div class="person-finger" id="person-finger-2"></div>
+                        <div class="person-finger" id="person-finger-3"></div>
+                        <div class="person-finger" id="person-finger-4"></div>
+                        <div class="person-finger" id="person-finger-5"></div>
+                    </div>
+                </div>
+                <div class="person-arm" id="person-arm-right">
+                    <div class="person-hand" id="person-hand-right">
+                        <div class="person-finger" id="person-finger-1"></div>
+                        <div class="person-finger" id="person-finger-2"></div>
+                        <div class="person-finger" id="person-finger-3"></div>
+                        <div class="person-finger" id="person-finger-4"></div>
+                        <div class="person-finger" id="person-finger-5"></div>
+                    </div>
+                </div>
+                <div id="person-head"></div>
+                <div id="person-neck"></div>
+                <div id="person-body">
+                    <div id="person-body-overlay"></div>
+                </div>
+            </div>
+            <div id="bar-container">
+                <div id="estimate-bar">
+                    <div id="estimate-indicator"></div>
+                </div>
+            </div>
+            <div id="buttons-container">
+                <div class="button" id="start-training-button">Start Training</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
