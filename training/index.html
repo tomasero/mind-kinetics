@@ -6,13 +6,7 @@
     <link href="http://fonts.googleapis.com/css?family=Lato:100,300,400,500,700" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="/js/script.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-<script>
-  var socket = io('http://localhost');
-  socket.on('commands', function (data) {
-    console.log(data);
-    armUp(data['data']);
-  });
-</script>
+    <script type="text/javascript" src="/js/client.js"></script>
 </head>
 <body>
     <div id="panel-container">
