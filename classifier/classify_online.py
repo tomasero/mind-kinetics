@@ -61,6 +61,9 @@ class MIOnline():
         self.pause_now = True
 
         self.flow = None
+
+        self.trial_interval = 4
+        self.pause_interval = 2
         
     def stop(self):
         # resolve files and stuff
@@ -95,11 +98,11 @@ class MIOnline():
         print(out[-1])
 
         if not self.pause_now:
-            self.send_it(out[-1], None)
+            self.send_it(out[-1][0], None)
 
     def background_classify(self):
         while self.classify_loop:
-            if len(self.data) > 50 and self.should_classify and self.flow:
+            if len(self.data) > 50 and not self.pause and self.flow:
                 self.classify()
             time.sleep(0.05)
 
@@ -128,26 +131,29 @@ class MIOnline():
 
     def manage_trials(self):
         self.send_it(0, 'pause')
+        self.pause_now = True
         self.current_class = 2
-        time.sleep(2)
+        time.sleep(self.pause_interval)
         
         for i in range(len(self.trials)):
             x, t = self.trials[i]
             
             self.current_trial = i
             self.current_class = t
-
+            self.pause_now = False
+            
             self.send_it(t, x)
-            time.sleep(2)
+            time.sleep(self.trial_interval)
 
             self.send_it(0, 'pause')
+            self.pause_now = True
             self.current_class = 2
 
             
             if (i+1) % 3 == 0:
                 self.train_classifier()
             else:
-                time.sleep(2)
+                time.sleep(self.pause_interval)
        
 
     def start(self):
