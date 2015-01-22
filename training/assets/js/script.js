@@ -10,10 +10,10 @@ $( document ).ready( function () {
 
 function transitionTo(panel) {
 	var id = '#' + panel + '-panel';
-	$('.panel').fadeOut(300);
+	$('.panel').fadeOut(200);
 	setTimeout( function () {
-		$(id).fadeIn(300);
-	}, 300);
+		$(id).fadeIn(200);
+	}, 200);
 }
 
 //Random generator
