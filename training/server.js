@@ -26,14 +26,18 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+var cors = require('cors');
 
+server.listen(3000);
+
+app.use(cors());
 app.use(express.static(__dirname + '/assets'));
-server.listen(8080);
 
 app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', function (soc) {
+    console.log('connected');
     socket = soc;
 });
