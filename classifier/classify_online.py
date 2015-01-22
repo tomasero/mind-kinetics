@@ -102,7 +102,7 @@ class MIOnline():
 
     def background_classify(self):
         while self.classify_loop:
-            if len(self.data) > 50 and not self.pause and self.flow:
+            if len(self.data) > 50 and (not self.pause_now) and self.flow:
                 self.classify()
             time.sleep(0.05)
 
@@ -141,8 +141,12 @@ class MIOnline():
             self.current_trial = i
             self.current_class = t
             self.pause_now = False
+
+            if self.flow:
+                self.send_it(0, x) # will classify
+            else:
+                self.send_it(t, x)
             
-            self.send_it(t, x)
             time.sleep(self.trial_interval)
 
             self.send_it(0, 'pause')
