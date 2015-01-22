@@ -16,7 +16,16 @@ from scipy.stats.stats import pearsonr
 ica = mdp.nodes.FastICANode()
 artifacts = RemoveArtifacts(remove_electricity=False)
 bandpass = BandpassFilter(7, 30, sampling_rate=250)
-csp = CSP(labelA = -1, labelB = 1, m=10)
+
+n_sigs = 70
+
+csp1 = CSP(labelA = 0, labelB = 1, m=10, input_dim=n_sigs)
+csp2 = CSP(labelA = 0, labelB = -1, m=10, input_dim=n_sigs)
+
+csp_layer = mdp.hinet.Layer([csp1, csp2])
+
+switchboard = mdp.hinet.Switchboard(input_dim=n_sigs, connections=range(n_sigs) * 2)
+
 var = LogVarianceWindow(box_width=150)
 embed = mdp.nodes.TimeDelayNode(time_frames=10, gap=1)
 fda = mdp.nodes.FDANode(output_dim=2)
@@ -40,7 +49,7 @@ lowpass2 = LowpassFilter(3, 0.005)
 cutoff = mdp.nodes.CutoffNode(lower_bound=-1, upper_bound=1)
 
 flow = mdp.Flow([ica, artifacts, bandpass,
-                 embed, csp, var, fda,
+                 embed, switchboard, csp_layer, var, fda,
                  knn, lowpass, cutoff], verbose=1)
 
 ##I want labels from you classifiers. Yes, labels.
@@ -54,7 +63,7 @@ for c in flow:
 
 def get_inp(x, xy, xys):
     inp = [x, x, x,
-           x, xys, x, xys,
+           x, x, xys, x, xys,
            xys, xy, xy]
     return inp
 

@@ -114,11 +114,11 @@ class MIOnline():
         
         # inp = classifier.get_inp_xy(sigs_train, y_train)
         f = self.flow
-        try:
-            self.flow = classifier.get_flow(sigs_train, y_train)
-            self.should_classify = True
-        except FlowException:
-            self.flow = f
+        # try:
+        self.flow = classifier.get_flow(sigs_train, y_train)
+        self.should_classify = True
+        # except FlowException:
+        #     self.flow = f
             
 
     def receive_sample(self, sample):
