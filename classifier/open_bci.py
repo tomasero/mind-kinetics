@@ -86,10 +86,13 @@ class OpenBCIBoard(object):
       self.streaming = True
     while self.streaming:
       #data = self.ser.readline()
-      data = self._read_serial_binary()
-      if data[0] > 2:
-          sample = OpenBCISample(data)
-          callback(sample)
+      try:
+          data = self._read_serial_binary()
+          if data[0] > 2:
+              sample = OpenBCISample(data)
+              callback(sample)
+      except ValueError:
+          continue
 
   """
 
@@ -141,7 +144,8 @@ class OpenBCIBoard(object):
     self.filtering_data = False;
 
   def warn(self, text):
-    print(text)
+    pass
+    # print(text)
 
   def _read_serial_binary(self, max_bytes_to_skip=3000):
         """
