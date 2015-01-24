@@ -68,6 +68,8 @@ function emitCommand(val, dir, thresh) {
             changeLabel('right');
         } else if (dir == 'baseline') {
             changeLabel('baseline');
+        } else {
+            
         }
     }
 }
