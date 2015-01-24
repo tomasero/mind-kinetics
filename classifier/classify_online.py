@@ -109,7 +109,7 @@ class MIOnline():
             self.total_times += 1
 
         if not self.pause_now:
-            self.send_it(out[-1][0], None)
+            self.send_it(None, out[-1][0])
 
     def background_classify(self):
         while self.classify_loop:
@@ -161,7 +161,7 @@ class MIOnline():
 
     def manage_trials(self):
         self.pause_now = True
-        self.send_it('pause')
+        self.send_it('pause', next=self.trials[0][0])
         self.current_class = 2
         time.sleep(self.pause_interval)
 
@@ -191,22 +191,24 @@ class MIOnline():
                 print(accuracy, self.good_times, self.total_times)
 
             self.pause_now = True
-
+            self.current_class = 2
+            
             if i == len(self.trials) - 1:
                 self.send_it('done', accuracy=accuracy)
-                
+                break
             
-            self.send_it('pause', 0, next=self.trials[i])
-            self.current_class = 2
+            
             # print('pause')
 
 
             if (i+1) % 6 == 0:
-                self.send_it('classifying', next=self.trials[i], accuracy=accuracy)
+                self.send_it('classifying', next=self.trials[i+1][0], accuracy=accuracy)
                 self.train_classifier()
                 self.good_times = 0
                 self.total_times = 0
             else:
+                self.send_it('pause', next=self.trials[i+1][0])
+
                 time.sleep(self.pause_interval)
 
 
