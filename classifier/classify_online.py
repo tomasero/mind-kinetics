@@ -38,8 +38,11 @@ class MIOnline():
         self.board = OpenBCIBoard(port, baud)
         self.bg_thread = None
         self.bg_classify = None
+        
         self.data = np.array([0.0]*8)
         self.y = np.array([0])
+        self.trial = np.array([-1])
+        
         self.should_classify = False
         self.classify_loop = True
         self.out_sig = np.array([0])
@@ -64,6 +67,9 @@ class MIOnline():
 
         self.trial_interval = 4
         self.pause_interval = 2
+
+        self.good_times = 0
+        self.total_times = 0
         
     def stop(self):
         # resolve files and stuff
@@ -85,7 +91,7 @@ class MIOnline():
             'dir': dirr
         }
         self.sock.sendto(json.dumps(d), (self.ip, self.port))
-        print(val, dirr)
+        # print(val, dirr)
         
     def classify(self):
         out = self.flow(self.data[-300:])
@@ -95,10 +101,13 @@ class MIOnline():
         else:
             s = 0
 
-        print(out[-1])
+        # print(out[-1])
 
-        if not self.pause_now:
-            self.send_it(out[-1][0], None)
+        if s == self.current_class:
+            self.good_times += 1
+        self.total_times += 1
+        
+        self.send_it(out[-1][0], None)
 
     def background_classify(self):
         while self.classify_loop:
@@ -108,17 +117,25 @@ class MIOnline():
 
     def train_classifier(self):
 
-        good = self.y != 2
+        # last 9 trials (3 trials per class)
+        min_trial = max(0, self.current_trial - 8)
+        
+        good = np.logical_and(self.y != 2, self.trial >= min_trial)
         sigs_train = self.data[good]
         y_train = self.y[good].astype('float32')
+
+        # print(self.data.shape, self.y.shape, self.trial.shape)
         
         # inp = classifier.get_inp_xy(sigs_train, y_train)
         f = self.flow
-        # try:
-        self.flow = classifier.get_flow(sigs_train, y_train)
-        self.should_classify = True
-        # except FlowException:
-        #     self.flow = f
+        try:
+            print('training classifier...')
+            self.flow = classifier.get_flow(sigs_train, y_train)
+            self.should_classify = True
+            print('updated classifier!')
+        except FlowException as e:
+            self.flow = f
+            print "FlowException error:\n{0}".format(e)
             
 
     def receive_sample(self, sample):
@@ -126,8 +143,11 @@ class MIOnline():
         sample = sample.channels
         #print(sample)
         if not np.any(np.isnan(sample)):
-            self.data = np.vstack( (self.data, sample) )
-            self.y = np.append(self.y, self.current_class)
+            trial = np.append(self.trial, self.current_trial)
+            y = np.append(self.y, self.current_class)
+            data = np.vstack( (self.data, sample) )
+
+            self.trial, self.y, self.data = trial, y, data
 
     def manage_trials(self):
         self.send_it(0, 'pause')
@@ -142,6 +162,8 @@ class MIOnline():
             self.current_class = t
             self.pause_now = False
 
+            print('{0} - {1}'.format(i, x))
+            
             if self.flow:
                 self.send_it(0, x) # will classify
             else:
@@ -149,9 +171,14 @@ class MIOnline():
             
             time.sleep(self.trial_interval)
 
+            if self.total_times > 0:
+                print(float(self.good_times) / self.total_times,
+                      self.good_times, self.total_times)
+            
             self.send_it(0, 'pause')
             self.pause_now = True
             self.current_class = 2
+            # print('pause')
 
             
             if (i+1) % 3 == 0:

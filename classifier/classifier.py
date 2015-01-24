@@ -11,7 +11,7 @@ from preprocess import *
 
 import pylab as pl
 
-from scipy.stats.stats import pearsonr 
+from scipy.stats.stats import pearsonr
 
 ica = mdp.nodes.FastICANode()
 artifacts = RemoveArtifacts(remove_electricity=False)
@@ -38,7 +38,7 @@ ridge = Oger.nodes.RidgeRegressionNode(ridge_param=10)
 gaussian = GaussianClassifierArray()
 # gauss_proc = mdp.nodes.GaussianHMMScikitsLearnNode()
 
-medfilt = MedianFilter(151)
+medfilt = MedianFilter(3)
 # classify = mdp.nodes.KNeighborsRegressorScikitsLearnNode(n_neighbors=1)
 # classify = mdp.nodes.SVCScikitsLearnNode()
 # classify = mdp.nodes.LibSVMClassifier()
@@ -48,9 +48,9 @@ lowpass2 = LowpassFilter(3, 0.005)
 
 cutoff = mdp.nodes.CutoffNode(lower_bound=-1, upper_bound=1)
 
-flow = mdp.Flow([ica, artifacts, bandpass,
+flow = mdp.Flow([medfilt, ica, artifacts, bandpass,
                  embed, switchboard, csp_layer, var, fda,
-                 knn, lowpass, cutoff], verbose=1)
+                 knn, lowpass, cutoff])
 
 ##I want labels from you classifiers. Yes, labels.
 for c in flow:
@@ -62,7 +62,7 @@ for c in flow:
 # xys = zip(sigs_split, y_split)
 
 def get_inp(x, xy, xys):
-    inp = [x, x, x,
+    inp = [x, x, x, x,
            x, x, xys, x, xys,
            xys, xy, xy]
     return inp
@@ -79,6 +79,3 @@ def get_flow(X, y):
     inp = get_inp_xy(X, y)
     f.train(inp)
     return f
-
-
-
