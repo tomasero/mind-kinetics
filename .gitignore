@@ -13,6 +13,7 @@ lib-cov
 *.out
 *.pid
 *.gz
+*.pyc
 pids
 logs
 results
