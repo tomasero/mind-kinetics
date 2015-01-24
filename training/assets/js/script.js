@@ -51,23 +51,25 @@ function armUp(dir) {
 }
 
 function emitCommand(val, dir, thresh) {
-    moveBarIndicatorTo((val+1)*50);
-    renderThreshold((thresh+1)*50);
     if (dir == 'pause') {
         changeLabel();
         changeContainerVisibility('person', 'hide');
         changeContainerVisibility('bar', 'hide');
     } else {
-        changeContainerVisibility('person', 'show');
-        changeContainerVisibility('bar', 'show');
-        if (dir == 'left') {
-            armUp('left');
-            changeLabel('left');
-        } else if (dir == 'right') {
-            armUp('right');
-            changeLabel('right');
-        } else if (dir == 'baseline') {
-            changeLabel('baseline');
+        moveBarIndicatorTo((val+1)*50);
+        renderThreshold((thresh+1)*50);
+        if (dir != null) {
+            changeContainerVisibility('person', 'show');
+            changeContainerVisibility('bar', 'show');
+            if (dir == 'left') {
+                armUp('left');
+                changeLabel('left');
+            } else if (dir == 'right') {
+                armUp('right');
+                changeLabel('right');
+            } else if (dir == 'baseline') {
+                changeLabel('baseline');
+            }
         }
     }
 }
@@ -82,11 +84,16 @@ function changeLabel(label) {
 
 function changeContainerVisibility(name, action) {
     var id = '#' + name + '-container';
-    if (action == 'show' && $(id).css('display') == 'none') {
+    if (action == 'show' && !isVisible(name)) {
         $(id).fadeIn(300);
-    } else if (action == 'hide' && $(id).css('display') != 'none') {
+    } else if (action == 'hide' && isVisible(name)) {
         $(id).fadeOut(300);
     }
+}
+
+function isVisible(name) {
+    var id = '#' + name + '-container';
+    return $(id).css('display') != 'none';
 }
 
 function startTraining(num) {
