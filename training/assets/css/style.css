@@ -23,8 +23,8 @@ body {
 
 #intro-button {
     font-size: 28px;
-    height: 75px;
-    line-height: 75px;
+    height: 70px;
+    line-height: 70px;
     width: 100px;
     text-align: center;
     margin: 0px auto;
@@ -42,9 +42,9 @@ body {
 #intro-container {
     position: absolute;
     top: 50%;
-    margin-top: calc(-228px/2);
+    margin-top: calc(-268px/2);
     left: 50%;
-    margin-left: calc(-178px/2);
+    margin-left: calc(-276px/2);
 }
 
 #person-body {
@@ -165,9 +165,9 @@ body {
     animation: move-arm-left 1s ease-in-out forwards;
     -webkit-animation: move-arm-left 1s ease-in-out forwards;
     -moz-animation: move-arm-left 1s ease-in-out forwards;  
-    animation-iteration-count: 3;
-    -webkit-animation-iteration-count: 3;
-    -moz-animation-iteration-count: 3;
+    animation-iteration-count: 2;
+    -webkit-animation-iteration-count: 2;
+    -moz-animation-iteration-count: 2;
 }
 
 @keyframes move-arm-left {
@@ -204,9 +204,9 @@ body {
     animation: move-arm-right 1s ease-in-out forwards;
     -webkit-animation: move-arm-right 1s ease-in-out forwards;
     -moz-animation: move-arm-right 1s ease-in-out forwards;  
-    animation-iteration-count: 3;
-    -webkit-animation-iteration-count: 3;
-    -moz-animation-iteration-count: 3;
+    animation-iteration-count: 2;
+    -webkit-animation-iteration-count: 2;
+    -moz-animation-iteration-count: 2;
 }
 
 @keyframes move-arm-right {
@@ -311,4 +311,28 @@ body {
     top: 0px;
     width: 100%;
     z-index: 999;
+}
+
+.bar-threshold {
+    width: 10px;
+    height: 25px;
+    position: absolute;
+    background: rgba(0,255,0,0.3);
+}
+
+#bar-threshold-left {
+    left: 0;
+}
+
+#bar-threshold-right {
+    right: 0;
+}
+
+#bar-center {
+    height: 25px;
+    width: 5px;
+    position: absolute;
+    background: rgba(0,0,0,0.3);
+    left: 50%;
+    margin-left: calc(-5px/2);
 }
