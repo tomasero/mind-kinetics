@@ -52,6 +52,7 @@ function armUp(dir) {
 
 function emitCommand(val, dir, thresh) {
     moveBarIndicatorTo((val+1)*50);
+    renderThreshold((thresh+1)*50);
     if (dir == 'pause') {
         changeLabel();
         changeContainerVisibility('person', 'hide');
@@ -108,4 +109,10 @@ function moveBarIndicatorTo(percentage) {
     }
     var left = percentage*475/100;
     $('#estimate-indicator').css({'left':left});
+}
+
+function renderThreshold(percentage) {
+    var dist = percentage*490/100;
+    $('#bar-threshold-left').css({'left':dist});
+    $('#bar-threshold-right').css({'right':dist});
 }
