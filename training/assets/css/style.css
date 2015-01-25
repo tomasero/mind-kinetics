@@ -407,3 +407,7 @@ body {
     line-height: 30px;
     margin: 0;
 }
+
+.bar-container-play {
+    top: 50%;
+}

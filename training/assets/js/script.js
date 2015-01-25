@@ -11,6 +11,10 @@ $( document ).ready( function () {
     });
     $('#intro-play-button').click( function () {
         socket.emit('backend', {'event':'play'});
+        changeContainerVisibility('person', 'hide');
+        $('#go-home-panel').fadeIn(200); 
+        $('#bar-container').addClass('bar-container-play');
+        transitionTo('main');
     });
     $('#training-button').click( function () {
         var data = {};
@@ -28,7 +32,11 @@ $( document ).ready( function () {
         socket.emit('backend', {'event':'stop'});
         transitionTo('intro');
         $('#buttons-panel').fadeOut(200);   
-        $('#go-home-panel').fadeOut(200); 
+        $('#go-home-panel').fadeOut(200);
+        setTimeout( function () {
+            changeContainerVisibility('person', 'show');
+            $('#bar-container').removeClass('bar-container-play');
+        }, 200);
     });
 });
 
