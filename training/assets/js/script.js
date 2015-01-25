@@ -100,15 +100,17 @@ function emitCommand(event, val, dir, thresh, accuracy) {
         }
     } else if (event == 'end') {
         
-        transitionTo(event, accuracy*100);
+        setAccuracy(event, accuracy*100);
         $(this).removeClass('training');
         $(this).text('Restart Training');
     } else {
         if (accuracy == null) {
-            
+            $('#classifying-accuracy-container').hide();
         } else {
+            $('#classifying-accuracy-container').show();
             setAccuracy(event, accuracy);
         }
+        transitionTo(event);
     }
 }
 
