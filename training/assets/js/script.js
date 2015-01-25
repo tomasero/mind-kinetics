@@ -1,23 +1,34 @@
 $( document ).ready( function () {
-    $('#intro-button').click( function () {
+    $('#intro-train-button').click( function () {
         socket.emit('backend', {'event':'start'});
+        $('#training-button').addClass('training');
         $('#training-button').text('Stop Training');
         setTimeout(function () {
             $('#buttons-panel').fadeIn(200);   
+            $('#go-home-panel').fadeIn(200); 
         }, 200);
         transitionTo('main');
+    });
+    $('#intro-play-button').click( function () {
+        socket.emit('backend', {'event':'play'});
     });
     $('#training-button').click( function () {
         var data = {};
         if (!$(this).hasClass('training')) {
             socket.emit('backend', {'event':'start'});
-            $(this).removeClass('training');
+            $(this).addClass('training');
             $(this).text('Stop Training');
         } else {
             socket.emit('backend', {'event':'stop'});
-            $(this).addClass('training');
+            $(this).removeClass('training');
             $(this).text('Start Training');
         }
+    });
+    $('#go-home-button').click( function () {
+        socket.emit('backend', {'event':'stop'});
+        transitionTo('intro');
+        $('#buttons-panel').fadeOut(200);   
+        $('#go-home-panel').fadeOut(200); 
     });
 });
 

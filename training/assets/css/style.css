@@ -3,6 +3,7 @@ body {
     margin: 0px;
     font-family: 'Lato', Arial;
     color: #2E3233;
+    background: #E2E3DF;
 }
 
 #panel-container {
@@ -231,7 +232,7 @@ body {
 
 
 #training-button {
-    font-size: 24px;
+    font-size: 22px;
 }
 
 
@@ -251,9 +252,9 @@ body {
     bottom: 0px;
     height: 100px;
     width: 100%;
-    background: linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(255, 255, 255, 1) 40%);
-    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(255, 255, 255, 1) 40%);
-    background: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(255, 255, 255, 1) 40%);
+    background: linear-gradient(top, rgba(0, 0, 0, 0) 10%, #E2E3DF 30%);
+    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 10%, #E2E3DF 30%);
+    background: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 10%, #E2E3DF 30%);
 }
 
 #command-label {
@@ -267,7 +268,7 @@ body {
 #estimate-bar {
     width: 500px;
     height: 30px;
-    background: #E2E3DF;
+    background: rgba(81, 91, 94, .5);
     position: absolute;
     left: 50%;
     margin-left: -250px;
@@ -284,7 +285,7 @@ body {
     height: 60px;
     left: calc(485px/2);
     margin-top: -15px;
-    background: rgba(202, 242, 0, 1);
+    background: rgba(202, 242, 0, .6);
     position: absolute;
     transition: 0.5s;
     -webkit-transition: 0.5s;
@@ -388,4 +389,21 @@ body {
 .button:hover {
     background: #2E3233;
     color: #CAF200;
+}
+
+#go-home-panel {
+    position: absolute;
+    top: 10;
+    left: 10;
+    display: none;
+    z-index: 999;
+}
+
+#go-home-button {
+    height: 30px;
+    width: 30px;
+    border-radius: 40px;
+    text-align: center;
+    line-height: 30px;
+    margin: 0;
 }
