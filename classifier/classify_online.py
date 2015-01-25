@@ -83,6 +83,8 @@ class MIOnline():
         self.good_times = 0
         self.total_times = 0
 
+        self.curr_event = None
+
     def stop(self):
         # resolve files and stuff
         self.board.should_stream = False
@@ -104,7 +106,7 @@ class MIOnline():
             'dir': dir,
             'accuracy': accuracy
         }
-        self.sock.sendto(json.dumps(d), (self.ip, self.port_send))
+        self.sock_send.sendto(json.dumps(d), (self.ip, self.port_send))
         # print(val, dirr)
 
     def classify(self):
@@ -186,7 +188,7 @@ class MIOnline():
         self.send_it('pause', dir=self.trials[0][0])
         self.current_class = 2
         
-        if check_wait(self.pause_interval):
+        if self.check_wait(self.pause_interval):
             return
 
 
@@ -209,7 +211,7 @@ class MIOnline():
             self.start_trial = time.time()
             
             # time.sleep(self.trial_interval)
-            if check_wait(self.trial_interval):
+            if self.check_wait(self.trial_interval):
                 return
 
             accuracy = None
@@ -236,13 +238,15 @@ class MIOnline():
                 self.send_it('pause', dir=self.trials[i+1][0])
 
                 # time.sleep(self.pause_interval)
-                if check_wait(self.pause_interval):
+                if self.check_wait(self.pause_interval):
                     return
 
 
     def update_commands(self):
+        print('updating commands...')
         while True:
             data = self.sock_receive.recv(4096)
+            print(data)
             data = json.loads(data)
             event = data.get('event', None)
             self.curr_event = event
@@ -251,7 +255,7 @@ class MIOnline():
         while True:
             if self.curr_event == 'start':
                 self.run_trials()
-            
+            time.sleep(0.5)
 
     def start(self):
 
@@ -270,6 +274,9 @@ class MIOnline():
         self.bg_classify = threading.Thread(target=self.background_classify, args=())
         self.bg_classify.start()
 
+        self.bg_commands = threading.Thread(target=self.update_commands, args=())
+        self.bg_commands.start()
+        
         self.manage_commands()
 
 
