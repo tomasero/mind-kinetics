@@ -56,9 +56,12 @@ class MIOnline():
         self.out_sig = np.array([0])
         # self.controls = np.array([[0]*4])
 
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.sock_send = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.ip = '127.0.0.1'
-        self.port = 33333
+        self.port_send = 33333
+
+        self.sock_receive = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.port_receive = 10000
 
         self.threshold = 0.1
 
@@ -100,7 +103,7 @@ class MIOnline():
             'dir': dir,
             'accuracy': accuracy
         }
-        self.sock.sendto(json.dumps(d), (self.ip, self.port))
+        self.sock.sendto(json.dumps(d), (self.ip, self.port_send))
         # print(val, dirr)
 
     def classify(self):
@@ -167,7 +170,7 @@ class MIOnline():
 
             self.trial, self.y, self.data = trial, y, data
 
-    def manage_trials(self):
+    def run_trials(self):
         self.pause_now = True
         self.send_it('pause', dir=self.trials[0][0])
         self.current_class = 2
@@ -205,12 +208,10 @@ class MIOnline():
                 self.send_it('done', accuracy=accuracy)
                 break
             
-            
-            # print('pause')
-
 
             if (i+1) % 6 == 0:
-                self.send_it('classifying', dir=self.trials[i+1][0], accuracy=accuracy)
+                self.send_it('classifying', dir=self.trials[i+1][0],
+                             accuracy=accuracy)
                 self.train_classifier()
                 self.good_times = 0
                 self.total_times = 0
@@ -219,6 +220,8 @@ class MIOnline():
 
                 time.sleep(self.pause_interval)
 
+    def manage_commands(self):
+        
 
     def start(self):
 
