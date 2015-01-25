@@ -13,8 +13,8 @@ import socket
 import json
 from mdp import FlowException
 
-# sys.path.append('..')
-from open_bci import *
+# from open_bci import *
+from open_bci_v3 import *
 
 import classifier
 
@@ -34,7 +34,7 @@ def generate_trials(N):
 
 class MIOnline():
 
-    def __init__(self, port=None, baud=115200):
+    def __init__(self, port='/dev/ttyUSB0', baud=115200):
         self.board = OpenBCIBoard(port, baud)
         self.bg_thread = None
         self.bg_classify = None
@@ -84,12 +84,12 @@ class MIOnline():
     def disconnect(self):
         self.board.disconnect()
 
-    def send_it(self, event, val=0, next=None, accuracy=None):
+    def send_it(self, event, val=0, dir=None, accuracy=None):
         d = {
             'threshold': self.threshold,
             'val': val,
             'event': event,
-            'next': next,
+            'dir': dir,
             'accuracy': accuracy
         }
         self.sock.sendto(json.dumps(d), (self.ip, self.port))
@@ -109,7 +109,7 @@ class MIOnline():
             self.total_times += 1
 
         if not self.pause_now:
-            self.send_it(None, out[-1][0])
+            self.send_it('state', out[-1][0])
 
     def background_classify(self):
         while self.classify_loop:
@@ -150,8 +150,11 @@ class MIOnline():
 
     def receive_sample(self, sample):
         t = time.time()
-        sample = sample.channels
-        #print(sample)
+        # sample = sample.channels
+        sample = sample.channel_data
+
+        print(sample)
+        
         if not np.any(np.isnan(sample)):
             trial = np.append(self.trial, self.current_trial)
             y = np.append(self.y, self.current_class)
@@ -161,7 +164,7 @@ class MIOnline():
 
     def manage_trials(self):
         self.pause_now = True
-        self.send_it('pause', next=self.trials[0][0])
+        self.send_it('pause', dir=self.trials[0][0])
         self.current_class = 2
         time.sleep(self.pause_interval)
 
@@ -175,9 +178,9 @@ class MIOnline():
             print('{0} - {1}'.format(i, x))
 
             if self.flow:
-                self.send_it(x, 0) # will classify
+                self.send_it('state', dir=x, val=0) # will classify
             else:
-                self.send_it(x, t)
+                self.send_it('state', dir=x, val=t)
 
             self.pause_now = False
 
@@ -202,12 +205,12 @@ class MIOnline():
 
 
             if (i+1) % 6 == 0:
-                self.send_it('classifying', next=self.trials[i+1][0], accuracy=accuracy)
+                self.send_it('classifying', dir=self.trials[i+1][0], accuracy=accuracy)
                 self.train_classifier()
                 self.good_times = 0
                 self.total_times = 0
             else:
-                self.send_it('pause', next=self.trials[i+1][0])
+                self.send_it('pause', dir=self.trials[i+1][0])
 
                 time.sleep(self.pause_interval)
 
@@ -219,7 +222,7 @@ class MIOnline():
 
 
         #create a new thread in which the OpenBCIBoard object will stream data
-        self.bg_thread = threading.Thread(target=self.board.start,
+        self.bg_thread = threading.Thread(target=self.board.startStreaming,
                                         args=(self.receive_sample, ))
         self.bg_thread.start()
 
