@@ -2,6 +2,7 @@
 body {
     margin: 0px;
     font-family: 'Lato', Arial;
+    color: #2E3233;
 }
 
 #panel-container {
@@ -32,17 +33,12 @@ body {
     width: 100px;
     text-align: center;
     margin: 0px auto;
-    background: rgba(0,0,0,0.4);
-    color: white;
     border-radius: 3px;
     z-index: 900;
     position: relative;
-    transition: 0.3s;
     font-weight: 300;
 }
-#intro-button:hover {
-    background: rgba(0,0,0,0.8);
-}
+
 
 #intro-container {
     position: absolute;
@@ -55,50 +51,51 @@ body {
 #person-body {
     width: 200px;
     height: 300px;
-    border-radius: 50px;
-    background: red;
+    border-radius: 20px;
+    background: #2E3233;
     margin-left: 200px;
     margin-top: 220px;
     position: absolute;
 }
 
 #person-head {
-    width: 200px;
+    width: 175px;
     height: 200px;
-    background: red;
-    border-radius: 100px;
-    margin-left: 200px;
+    background: #2E3233;
+    border-radius: 87.5px / 100px;
+    margin-left: 212.5px;
     position: absolute;
 }
 
 .person-arm {
-    height: 50px;
-    width: 250px;
-    background: red;
-    border-radius: 25px;
-    margin-top: 230px;
+    height: 45px;
+    width: 230px;
+    background: #2E3233;
+    border-radius: 20px;
+    margin-top: 235px;
     position: absolute;
     transition: 0.3s;
 }
 
 #person-arm-left {
     transform: rotate(-30deg);
-    transform-origin: 215px 0px;
+/*    transform-origin: 215px 0px;*/
+    transform-origin: 200px 10px;
 }
 
-#person-arm-right {
+  #person-arm-right {
     transform: rotate(30deg);
-    margin-left: 355px;
-    transform-origin: 30px 0px;
+    margin-left: 370px;
+    transform-origin: 30px 10px;
 }
 
 #person-neck {
-    height: 50px;
-    width: 50px;
+    height: 30px;
+    width: 35px;
     position: absolute;
-    margin-top: 190px;
-    margin-left: 275px;
-    background: red;
+    margin-top: 195px;
+    margin-left: 282.5px;
+    background: #2E3233;
 }
 
 
@@ -114,10 +111,10 @@ body {
 }
 
 .person-hand {
-    background: black;
+    background: #CAF200;
     height: 50px;
     width: 50px;
-    margin-left: -40px;
+    margin-left: -50px;
     border-radius: 20px;
     position: absolute;
 }
@@ -128,7 +125,7 @@ body {
     height: 10px;
     border-radius: 7.5px;
     margin-left: -20px;
-    background: red;
+    background: #2E3233;
     transform-origin: right;
 }
 
@@ -161,7 +158,7 @@ body {
 
 #person-hand-right {
     transform: rotateY(180deg);
-    margin-left: 240px;
+    margin-left: 230px;
 }
 
 .move-arm-left {
@@ -249,9 +246,6 @@ body {
     font-size: 28px;
     font-weight: 300;
     padding: 20px;
-    background: rgba(0,0,0,0.3);
-    color: white;
-    transition: 0.3s;
 }
 #start-training-button:hover {
     background: rgba(0,0,0,0.8);
@@ -272,9 +266,9 @@ body {
     bottom: 0px;
     height: 100px;
     width: 100%;
-    background: linear-gradient(top, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, 1) 60%);
-    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, 1) 60%);
-    background: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, 1) 60%);
+    background: linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(255, 255, 255, 1) 40%);
+    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(255, 255, 255, 1) 40%);
+    background: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(255, 255, 255, 1) 40%);
 }
 
 #command-label {
@@ -287,8 +281,8 @@ body {
 
 #estimate-bar {
     width: 500px;
-    height: 25px;
-    background: rgba(0,0,0,0.3);
+    height: 30px;
+    background: #E2E3DF;
     position: absolute;
     left: 50%;
     margin-left: -250px;
@@ -302,10 +296,10 @@ body {
 
 #estimate-indicator {
     width: 25px;
-    height: 50px;
+    height: 60px;
     left: calc(475px/2);
-    margin-top: -12.5px;
-    background: rgba(255,0,0,0.3);
+    margin-top: -15px;
+    background: rgba(202, 242, 0, .4);
     position: absolute;
     transition: 0.5s;
     -webkit-transition: 0.5s;
@@ -320,9 +314,9 @@ body {
 
 .bar-threshold {
     width: 10px;
-    height: 25px;
+    height: 30px;
     position: absolute;
-    background: rgba(0,255,0,0.3);
+    background: #CAF200;
 }
 
 #bar-threshold-left {
@@ -334,10 +328,10 @@ body {
 }
 
 #bar-center {
-    height: 25px;
+    height: 30px;
     width: 5px;
     position: absolute;
-    background: rgba(0,0,0,0.3);
+    background: #2E3233;
     left: 50%;
     margin-left: calc(-5px/2);
 }
@@ -393,4 +387,16 @@ body {
 
 #intro-panel {
     display: block;
+}
+
+.button {
+    border-radius: 3px;
+    background: #515B5E;
+    color: white;
+    transition: 0.3s;
+}
+
+.button:hover {
+    background: #2E3233;
+    color: #CAF200;
 }
