@@ -13,7 +13,7 @@ def fisher_criterion(X, y, a, b):
     X_2 = X[y == b, ]
     top = np.abs(X_1.mean(0) - X_2.mean(0))
     bottom = np.sqrt((X_1.std(0)**2.0 + X_2.std(0)**2) / 2.0)
-    return top / bottom
+    return top / (bottom + 1)
 
 # time embed the features n times, spaced k apart
 def time_embed(features, k, n):
@@ -128,6 +128,7 @@ def smooth_out_y(y, box_width):
 class EEGFeatures(mdp.Node):
     def __init__(self, sampling_rate=250, box_width=250, M=25, wavelets_freqs=(10, 22),
                  input_dim=None, dtype=None):
+
         super(EEGFeatures, self).__init__(input_dim=input_dim, dtype=dtype)
 
         self.sampling_rate = sampling_rate
@@ -163,7 +164,7 @@ class EEGFeatures(mdp.Node):
                                   # cols, FFT len * n_signals * n_wavelets * 1 (abs, no angle)
                                   self.box_width * n_signals * n_wavelets * 1)  )
 
-        ss = [np.zeros(X.shape) for i in range(n_wavelets)]
+        ss = [np.zeros(X.shape, dtype='complex64') for i in range(n_wavelets)]
         ss[0] = np.copy(X)
         for i in range(1, n_wavelets):
             wavelet = self.wavelets[i-1]
@@ -172,8 +173,8 @@ class EEGFeatures(mdp.Node):
 
 
         for start in range(self.box_width, X.shape[0]):
-            if start % 5000 == 0:
-                print("{0:.2%}".format(float(start) / X.shape[0]))
+            # if start % 5000 == 0:
+            #     print("{0:.2%}".format(float(start) / X.shape[0]))
 
             # fft_len = np.fft.rfft(data[..., 0]).shape[0]
             features = np.array([])
@@ -363,7 +364,7 @@ class FisherFeaturesUncorr(mdp.Node):
 
         self.labelA = labelA
         self.labelB = labelB
-        self.output_dim = output_dim
+        self.out_dim = output_dim
         self.threshold = threshold
 
         self.indexes = None
@@ -382,12 +383,12 @@ class FisherFeaturesUncorr(mdp.Node):
         indexes = np.arange(X.shape[1])
 
         multiplier = 6
-        if self.output_dim >= 250:
+        if self.out_dim >= 250:
             multiplier = 2.5
-        elif self.output_dim >= 100:
+        elif self.out_dim >= 100:
             multiplier = 3
 
-        good_features = fish_good_features(X, y, self.labelA, self.labelB, self.output_dim * multiplier)
+        good_features = fish_good_features(X, y, self.labelA, self.labelB, min(self.out_dim * multiplier, X.shape[1]))
         indexes = indexes[good_features]
         print(len(indexes))
 
@@ -395,7 +396,7 @@ class FisherFeaturesUncorr(mdp.Node):
         indexes = indexes[good_features]
         print(len(indexes))
 
-        good_features = fish_good_features(X[:, indexes], y, self.labelA, self.labelB, self.output_dim)
+        good_features = fish_good_features(X[:, indexes], y, self.labelA, self.labelB, self.out_dim)
         indexes = indexes[good_features]
         print(len(indexes))
 
@@ -408,7 +409,7 @@ class FisherFeaturesUncorr(mdp.Node):
 
 
 class LowpassFilter(mdp.Node):
-    def __init__(self, N, Wn):
+    def __init__(self, N, Wn, ignore=0):
         super(LowpassFilter, self).__init__()
 
         self.Wn = Wn
@@ -417,6 +418,8 @@ class LowpassFilter(mdp.Node):
         self.b = b
         self.a = a
 
+        self.ignore = ignore
+        
     def _set_input_dim(self, n):
         self._input_dim = n
         self.output_dim = n
@@ -427,7 +430,9 @@ class LowpassFilter(mdp.Node):
         return False
 
     def _execute(self, X):
-        out = signal.lfilter(self.b, self.a, X, axis=0)
+        out = signal.lfilter(self.b, self.a, X[self.ignore:], axis=0)
+        if self.ignore > 0:
+            out = np.vstack( [X[:self.ignore], out] )
         return out
 
 
