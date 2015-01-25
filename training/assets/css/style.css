@@ -26,18 +26,7 @@ body {
     margin-bottom: 50px;
 }
 
-#intro-button {
-    font-size: 28px;
-    height: 70px;
-    line-height: 70px;
-    width: 100px;
-    text-align: center;
-    margin: 0px auto;
-    border-radius: 3px;
-    z-index: 900;
-    position: relative;
-    font-weight: 300;
-}
+
 
 
 #intro-container {
@@ -165,9 +154,9 @@ body {
     animation: move-arm-left 1s ease-in-out forwards;
     -webkit-animation: move-arm-left 1s ease-in-out forwards;
     -moz-animation: move-arm-left 1s ease-in-out forwards;  
-    animation-iteration-count: 2;
-    -webkit-animation-iteration-count: 2;
-    -moz-animation-iteration-count: 2;
+    animation-iteration-count: 3;
+    -webkit-animation-iteration-count: 3;
+    -moz-animation-iteration-count: 3;
 }
 
 @keyframes move-arm-left {
@@ -204,9 +193,9 @@ body {
     animation: move-arm-right 1s ease-in-out forwards;
     -webkit-animation: move-arm-right 1s ease-in-out forwards;
     -moz-animation: move-arm-right 1s ease-in-out forwards;  
-    animation-iteration-count: 2;
-    -webkit-animation-iteration-count: 2;
-    -moz-animation-iteration-count: 2;
+    animation-iteration-count: 3;
+    -webkit-animation-iteration-count: 3;
+    -moz-animation-iteration-count: 3;
 }
 
 @keyframes move-arm-right {
@@ -242,10 +231,7 @@ body {
 
 
 #start-training-button {
-    display: inline-block;
-    font-size: 28px;
-    font-weight: 300;
-    padding: 20px;
+    font-size: 24px;
 }
 #start-training-button:hover {
     background: rgba(0,0,0,0.8);
@@ -394,9 +380,25 @@ body {
     background: #515B5E;
     color: white;
     transition: 0.3s;
+    display: inline-block;
+    font-size: 28px;
+    font-weight: 300;
+    padding: 20px;
+    margin: 0px 10px 0px 10px;
+    cursor: pointer;
 }
 
 .button:hover {
     background: #2E3233;
     color: #CAF200;
+}
+
+#stop-training-button {
+    font-size: 24px;
+}
+
+.button-disabled {
+    background: #E2E3DF !important;
+    color: #2E3233 !important;
+    cursor: wait;
 }
