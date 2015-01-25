@@ -30,12 +30,20 @@ def generate_trials(N):
 
     return d
 
-#TODO: update the classifier every few trials
+def initialize_board(port, baud):
+    board = OpenBCIBoard(port, baud)
+    # for i in range(100):
+    #     print(board.ser.read())
+    board.disconnect()
+
+    board = OpenBCIBoard(port, baud)
+    return board
 
 class MIOnline():
 
     def __init__(self, port='/dev/ttyUSB0', baud=115200):
-        self.board = OpenBCIBoard(port, baud)
+        self.board = initialize_board(port, baud)
+        # self.board = OpenBCIBoard(port, baud)
         self.bg_thread = None
         self.bg_classify = None
 
@@ -152,9 +160,6 @@ class MIOnline():
         t = time.time()
         # sample = sample.channels
         sample = sample.channel_data
-
-        print(sample)
-        
         if not np.any(np.isnan(sample)):
             trial = np.append(self.trial, self.current_trial)
             y = np.append(self.y, self.current_class)
@@ -175,7 +180,7 @@ class MIOnline():
             self.current_class = t
 
 
-            print('{0} - {1}'.format(i, x))
+            print('{0} - {1}\t({2})'.format(i, x, self.data.shape))
 
             if self.flow:
                 self.send_it('state', dir=x, val=0) # will classify
