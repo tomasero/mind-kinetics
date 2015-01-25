@@ -144,9 +144,9 @@ class MIOnline():
         n_back = 6
         min_trial = max(0, self.current_trial - (n_back - 1))
 
-        good = np.logical_and(self.y != 2, self.trial >= min_trial)
-        sigs_train = self.data[good]
-        y_train = self.y[good].astype('float32')
+        good = np.logical_and(y != 2, trial >= min_trial)
+        sigs_train = data[good]
+        y_train = y[good].astype('float32')
 
         # print(self.data.shape, self.y.shape, self.trial.shape)
 
