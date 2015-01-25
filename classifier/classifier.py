@@ -20,7 +20,7 @@ bandpass = BandpassFilter(7, 30, sampling_rate=250)
 fisher = FisherFeaturesUncorr(output_dim = 20, labelA = -1, labelB = 1)
 features = EEGFeatures(wavelets_freqs=(10,))
 
-n_sigs = 80
+n_sigs = 70
 m = 10
 csp1 = CSP(labelA = 0, labelB = 1, m=m, input_dim=n_sigs)
 csp2 = CSP(labelA = 0, labelB = -1, m=m, input_dim=n_sigs)
@@ -57,12 +57,12 @@ pca = mdp.nodes.PCANode(output_dim = 0.98)
 
 cutoff = mdp.nodes.CutoffNode(lower_bound=-1, upper_bound=1)
 
-# flow = mdp.Flow([bandpass,
-#                  embed, switchboard, csp_layer, var,
-#                  knn, lowpass, cutoff])
+flow = mdp.Flow([ica, artifacts, bandpass,
+                 embed, switchboard, csp_layer, var,
+                 knn, lowpass, cutoff])
 
-flow = mdp.Flow([features, fisher,
-                 knn, lowpass_ignore, cutoff])
+# flow = mdp.Flow([features, fisher,
+#                  knn, lowpass_ignore, cutoff])
 
 ##I want labels from you classifiers. Yes, labels.
 for c in flow:
@@ -74,12 +74,12 @@ for c in flow:
 # xys = zip(sigs_split, y_split)
 
 def get_inp(x, xy, xys):
-    # inp = [x,
-    #        x, x, xys, x,
-    #        xys, x, x]
+    inp = [x, x, x,
+           x, x, xys, x,
+           xys, x, x]
     
-    inp = [x, xys,
-           xys, x, xys]
+    # inp = [x, xys,
+    #        xys, x, xys]
 
     return inp
 
