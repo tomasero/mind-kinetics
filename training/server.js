@@ -50,6 +50,7 @@ io.on('connection', function (soc) {
     console.log('connected');
     socket = soc;
     socket.on('backend', function(data) {
+        console.log('backend: ' + JSON.stringify(data));
         send_python_data(JSON.stringify(data));
     });
 });
