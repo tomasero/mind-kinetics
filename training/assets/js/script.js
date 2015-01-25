@@ -4,7 +4,20 @@ $( document ).ready( function () {
         transitionTo('main');
     });
     $('#start-training-button').click( function () {
-        startTraining(10);    
+        $(this).addClass('button-disabled');
+        var data = {'event':'start'};
+        socket.emit('backend', { data: data });
+    });
+    $('#stop-training-button').click( function () {
+        $(this).addClass('button-disabled');
+        console.log('hi');
+        (function (obj) {
+            setTimeout( function () {
+                $(obj).removeClass('button-disabled');
+            }, 1000);
+        })(this);
+        var data = {'event':'stop'};
+        socket.emit('backend', { data: data });
     });
 });
 
@@ -74,6 +87,9 @@ function emitCommand(event, val, dir, thresh, accuracy) {
     } else {
         setAccuracy(event, accuracy*100);
         transitionTo(event, accuracy*100);
+        if (event == 'end') {
+            $('#start-training-button').removeClass('button-disabled');
+        }
     }
 }
 
