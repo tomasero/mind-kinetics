@@ -14,7 +14,7 @@ $( document ).ready( function () {
             $(this).addClass('training');
             $(this).text('Stop Training');
         }
-        socket.emit('backend', { data: data });
+        socket.emit('backend', data);
     });
 });
 
