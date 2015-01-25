@@ -8,11 +8,11 @@ $( document ).ready( function () {
         if (!$(this).hasClass('training')) {
             data = {'event':'start'};
             $(this).removeClass('training');
-            $(this).text('Start Training');
+            $(this).text('Stop Training');
         } else {
             data = {'event':'stop'};
             $(this).addClass('training');
-            $(this).text('Stop Training');
+            $(this).text('Start Training');
         }
         socket.emit('backend', data);
     });
