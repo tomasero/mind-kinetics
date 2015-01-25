@@ -1,20 +1,24 @@
 $( document ).ready( function () {
     $('#intro-button').click( function () {
-        console.log('intro');
+        socket.emit('backend', {'event':'start'});
+        $(this).removeClass('training');
+        $(this).text('Stop Training');
+        setTimeout(function () {
+            $('#buttons-panel').fadeIn(200);      
+        }, 200);
         transitionTo('main');
     });
     $('#training-button').click( function () {
         var data = {};
         if (!$(this).hasClass('training')) {
-            data = {'event':'start'};
+            socket.emit('backend', {'event':'start'});
             $(this).removeClass('training');
             $(this).text('Stop Training');
         } else {
-            data = {'event':'stop'};
+            socket.emit('backend', {'event':'stop'});
             $(this).addClass('training');
             $(this).text('Start Training');
         }
-        socket.emit('backend', data);
     });
 });
 
@@ -38,11 +42,6 @@ function getNCommands(num) {
     console.log(outCommands);
     return outCommands;
 }
-
-function shuffle(o){ //v1.0
-    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-    return o;
-};
 
 function armUp(dir) {
     var arm = '#person-arm-' + dir;
@@ -81,12 +80,16 @@ function emitCommand(event, val, dir, thresh, accuracy) {
         } else if (dir == 'baseline') {
             changeLabel('baseline');
         }
-    } else {
-        setAccuracy(event, accuracy*100);
+    } else if (event == 'end') {
+        
         transitionTo(event, accuracy*100);
-        if (event == 'end') {
-            $(this).removeClass('training');
-            $(this).text('Restart Training');
+        $(this).removeClass('training');
+        $(this).text('Restart Training');
+    } else {
+        if (accuracy == null) {
+            
+        } else {
+            setAccuracy(event, null);
         }
     }
 }
@@ -145,5 +148,12 @@ function setNextDirection(dir) {
 }
 function setAccuracy(panel, accuracy) {
     var id = '#' + panel + '-accuracy';
-    $(id).text(Math.round(accuracy) + '%');
+    $(id).text(Math.round(accuracy) + '%');   
+    if (panel == 'classifying') {
+        if (accuracy == null) {
+            $('#classifying-accuracy-label').hide();    
+        } else {
+            $('#classifying-accuracy-container').show();    
+        }
+    }
 }

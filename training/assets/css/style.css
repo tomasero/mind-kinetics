@@ -235,12 +235,13 @@ body {
 }
 
 
-#buttons-container {
+#buttons-panel {
     position: absolute;
     width: 100%;
     text-align: center;
     bottom: 20px;
     font-weight: 300;
+    display: none;
 }
 
 
@@ -283,7 +284,7 @@ body {
     height: 60px;
     left: calc(475px/2);
     margin-top: -15px;
-    background: rgba(202, 242, 0, .4);
+    background: rgba(202, 242, 0, .6);
     position: absolute;
     transition: 0.5s;
     -webkit-transition: 0.5s;
@@ -335,13 +336,13 @@ body {
 
 .panel-title {
     font-size: 80px;
-    font-weight: 300;
+    font-weight: 500;
 }
 
 .panel-subtitle {
     padding-top: 10px;
     font-size: 80px;
-    font-weight: 500;
+    font-weight: 300;
 }
 
 
@@ -356,8 +357,6 @@ body {
     height: auto;
     width: auto;
 }
-
-
 
 #done-panel {
     height: auto;
