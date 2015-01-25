@@ -13,8 +13,8 @@ import socket
 import json
 from mdp import FlowException
 
-# from open_bci import *
-from open_bci_v3 import *
+from open_bci import *
+# from open_bci_v3 import *
 
 import classifier
 
@@ -56,9 +56,9 @@ def find_port():
 
 class MIOnline():
 
-    def __init__(self, port='/dev/ttyUSB0', baud=115200):
-        self.board = initialize_board(port, baud)
-        # self.board = OpenBCIBoard(port, baud)
+    def __init__(self, port=None, baud=115200):
+        # self.board = initialize_board(port, baud)
+        self.board = OpenBCIBoard('/dev/ttyACM0', baud)
         self.bg_thread = None
         self.bg_classify = None
 
@@ -100,7 +100,8 @@ class MIOnline():
 
         self.curr_event = None
 
-        self.arm_port = find_port()
+        self.arm_port = '/dev/ttyACM1'
+        # self.arm_port = None
         if self.arm_port:
             print('found arm on port {0}'.format(self.arm_port))
             self.arm = serial.Serial(self.arm_port, 115200);
@@ -196,8 +197,8 @@ class MIOnline():
 
     def receive_sample(self, sample):
         t = time.time()
-        # sample = sample.channels
-        sample = sample.channel_data
+        sample = sample.channels
+        # sample = sample.channel_data
         if not np.any(np.isnan(sample)):
             trial = np.append(self.trial, self.current_trial)
             y = np.append(self.y, self.current_class)
@@ -307,8 +308,10 @@ class MIOnline():
 
 
         #create a new thread in which the OpenBCIBoard object will stream data
-        self.bg_thread = threading.Thread(target=self.board.startStreaming,
-                                        args=(self.receive_sample, ))
+        self.bg_thread = threading.Thread(
+            # target=self.board.startStreaming,
+            target = self.board.start,
+            args=(self.receive_sample, ))
         self.bg_thread.start()
 
         self.classify_loop = True
