@@ -106,7 +106,7 @@ class MIOnline():
             'dir': dir,
             'accuracy': accuracy
         }
-        self.sock.sendto(json.dumps(d), (self.ip, self.port_send))
+        self.sock_send.sendto(json.dumps(d), (self.ip, self.port_send))
         # print(val, dirr)
 
     def classify(self):
@@ -188,7 +188,7 @@ class MIOnline():
         self.send_it('pause', dir=self.trials[0][0])
         self.current_class = 2
         
-        if check_wait(self.pause_interval):
+        if self.check_wait(self.pause_interval):
             return
 
 
@@ -211,7 +211,7 @@ class MIOnline():
             self.start_trial = time.time()
             
             # time.sleep(self.trial_interval)
-            if check_wait(self.trial_interval):
+            if self.check_wait(self.trial_interval):
                 return
 
             accuracy = None
@@ -238,7 +238,7 @@ class MIOnline():
                 self.send_it('pause', dir=self.trials[i+1][0])
 
                 # time.sleep(self.pause_interval)
-                if check_wait(self.pause_interval):
+                if self.check_wait(self.pause_interval):
                     return
 
 
