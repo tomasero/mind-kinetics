@@ -103,6 +103,7 @@ function emitCommand(event, val, dir, thresh, accuracy) {
         $(this).removeClass('training');
         $(this).text('Restart Training');
     } else {
+        console.log(event);
         if (accuracy == null) {
             $('#classifying-accuracy-container').hide();
         } else {
