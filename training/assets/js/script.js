@@ -108,6 +108,8 @@ function emitCommand(event, val, dir, thresh, accuracy) {
         } else {
             $('#classifying-accuracy-container').show();
             setAccuracy(event, accuracy);
+            console.log(event);
+            console.log(accuracy);
         }
         transitionTo(event);
     }
