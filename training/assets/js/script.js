@@ -11,6 +11,7 @@ $( document ).ready( function () {
     $('#intro-play-button').click( function () {
         socket.emit('backend', {'event':'play'});
         changeContainerVisibility('person', 'hide');
+        changeContainerVisibility('command', 'hide');
         $('#go-home-panel').fadeIn(200); 
         $('#bar-container').addClass('bar-container-play');
         transitionTo('main');
@@ -34,6 +35,7 @@ $( document ).ready( function () {
         $('#go-home-panel').fadeOut(200);
         setTimeout( function () {
             changeContainerVisibility('person', 'show');
+            changeContainerVisibility('command', 'show');
             $('#bar-container').removeClass('bar-container-play');
         }, 200);
     });
