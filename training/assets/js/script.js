@@ -50,27 +50,28 @@ function armUp(dir) {
     }
 }
 
-function emitCommand(val, dir, thresh) {
-    if (dir == 'pause') {
-        changeLabel();
-        changeContainerVisibility('person', 'hide');
-        changeContainerVisibility('bar', 'hide');
-    } else {
+function emitCommand(event, val, dir, thresh, accuracy) {
+    if (event == 'pause') {
+        setNextDirection(dir);
+        transitionTo(event);
+    } else if (event == 'state'){
+        transitionTo('main');
         moveBarIndicatorTo((val+1)*50);
         renderThreshold((thresh+1)*50);
-        if (dir != null) {
-            changeContainerVisibility('person', 'show');
-            changeContainerVisibility('bar', 'show');
-            if (dir == 'left') {
-                armUp('left');
-                changeLabel('left');
-            } else if (dir == 'right') {
-                armUp('right');
-                changeLabel('right');
-            } else if (dir == 'baseline') {
-                changeLabel('baseline');
-            }
+//            changeContainerVisibility('person', 'show');
+//            changeContainerVisibility('bar', 'show');
+        if (dir == 'left') {
+            armUp('left');
+            changeLabel('left');
+        } else if (dir == 'right') {
+            armUp('right');
+            changeLabel('right');
+        } else if (dir == 'baseline') {
+            changeLabel('baseline');
         }
+    } else {
+        setAccuracy(event, accuracy*100);
+        transitionTo(event, accuracy*100);
     }
 }
 
@@ -122,4 +123,12 @@ function renderThreshold(percentage) {
     var dist = percentage*490/100;
     $('#bar-threshold-left').css({'left':dist});
     $('#bar-threshold-right').css({'right':dist});
+}
+
+function setNextDirection(dir) {
+    $('#next-dir').text(dir);
+}
+function setAccuracy(panel, accuracy) {
+    var id = '#' + panel + '-accuracy';
+    $(id).text(accuracy + '%');
 }
