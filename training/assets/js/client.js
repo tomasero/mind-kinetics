@@ -2,7 +2,12 @@
 var socket = io();
 socket.on('commands', function (data) {
     var dict = JSON.parse(data['data']);
-    var command = data['data'];
-    console.log(data['data']);
-    emitCommand(dict['val'], dict['dir'], dict['threshold']);
+    
+    var event = dict['event'],
+        val = dict['val'],
+        dir = dict['dir'],
+        threshold = dict['threshold'],
+        accuracy = dict['accuracy'];
+
+    emitCommand(event, val, dir, threshold, accuracy);
 });

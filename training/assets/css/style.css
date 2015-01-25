@@ -1,6 +1,7 @@
 
 body {
     margin: 0px;
+    font-family: 'Lato', Arial;
 }
 
 #panel-container {
@@ -13,10 +14,13 @@ body {
     position: absolute;
     height: 100%;
     width: 100%;
+    text-align: center;
+    display: none;
 }
 
 #intro-title {
-    font-size: 48px;
+    font-size: 80px;
+    font-weight: 300;
     text-align: center;
     margin-bottom: 50px;
 }
@@ -34,6 +38,7 @@ body {
     z-index: 900;
     position: relative;
     transition: 0.3s;
+    font-weight: 300;
 }
 #intro-button:hover {
     background: rgba(0,0,0,0.8);
@@ -42,9 +47,9 @@ body {
 #intro-container {
     position: absolute;
     top: 50%;
-    margin-top: calc(-268px/2);
+    margin-top: calc(-216px/2);
     left: 50%;
-    margin-left: calc(-276px/2);
+    margin-left: calc(-468px/2);
 }
 
 #person-body {
@@ -96,9 +101,7 @@ body {
     background: red;
 }
 
-#main-panel {
-    display: none;
-}
+
 
 #person-container {
     width: 605px;
@@ -259,6 +262,7 @@ body {
     width: 100%;
     text-align: center;
     bottom: 20px;
+    font-weight: 300;
 }
 
 
@@ -278,6 +282,7 @@ body {
     text-align: center;
     height: 100px;
     line-height: 100px;
+    font-weight: 300;
 }
 
 #estimate-bar {
@@ -335,4 +340,57 @@ body {
     background: rgba(0,0,0,0.3);
     left: 50%;
     margin-left: calc(-5px/2);
+}
+
+
+
+#classifying-panel {
+    position: absolute;
+    left: 50%;
+    margin-left: calc(-562px/2);
+    top: 50%;
+    margin-top: calc(-202px/2);
+    z-index: 999;
+    height: auto;
+    width: auto;
+}
+
+.panel-title {
+    font-size: 80px;
+    font-weight: 300;
+}
+
+.panel-subtitle {
+    padding-top: 10px;
+    font-size: 80px;
+    font-weight: 500;
+}
+
+
+
+#pause-panel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: calc(-182px/2);
+    margin-left: calc(-229px/2);
+    z-index: 999;
+    height: auto;
+    width: auto;
+}
+
+
+
+#done-panel {
+    height: auto;
+    width: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: calc(-569px/2);
+    margin-top: calc(-202px/2);
+}
+
+#intro-panel {
+    display: block;
 }
