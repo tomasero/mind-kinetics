@@ -280,11 +280,11 @@ body {
 }
 
 #estimate-indicator {
-    width: 25px;
+    width: 15px;
     height: 60px;
-    left: calc(475px/2);
+    left: calc(485px/2);
     margin-top: -15px;
-    background: rgba(202, 242, 0, .6);
+    background: rgba(202, 242, 0, 1);
     position: absolute;
     transition: 0.5s;
     -webkit-transition: 0.5s;

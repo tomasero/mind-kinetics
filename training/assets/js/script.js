@@ -1,10 +1,9 @@
 $( document ).ready( function () {
     $('#intro-button').click( function () {
         socket.emit('backend', {'event':'start'});
-        $(this).removeClass('training');
-        $(this).text('Stop Training');
+        $('#training-button').text('Stop Training');
         setTimeout(function () {
-            $('#buttons-panel').fadeIn(200);      
+            $('#buttons-panel').fadeIn(200);   
         }, 200);
         transitionTo('main');
     });
@@ -133,7 +132,7 @@ function moveBarIndicatorTo(percentage) {
     } else if (percentage > 100) {
         percentage = 100;    
     }
-    var left = percentage*475/100;
+    var left = percentage*485/100;
     $('#estimate-indicator').css({'left':left});
 }
 
