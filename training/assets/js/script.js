@@ -5,7 +5,7 @@ $( document ).ready( function () {
     });
     $('#training-button').click( function () {
         var data = {};
-        if ($(this).hasClass('training')) {
+        if (!$(this).hasClass('training')) {
             data = {'event':'start'};
             $(this).removeClass('training');
             $(this).text('Start Training');
@@ -14,7 +14,7 @@ $( document ).ready( function () {
             $(this).addClass('training');
             $(this).text('Stop Training');
         }
-        socket.emit('backend', { data: data });
+        socket.emit('backend', data);
     });
 });
 
