@@ -107,7 +107,7 @@ function emitCommand(event, val, dir, thresh, accuracy) {
         if (accuracy == null) {
             
         } else {
-            setAccuracy(event, null);
+            setAccuracy(event, accuracy);
         }
     }
 }
