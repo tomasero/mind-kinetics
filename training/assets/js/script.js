@@ -55,7 +55,9 @@ function emitCommand(event, val, dir, thresh, accuracy) {
         setNextDirection(dir);
         transitionTo(event);
     } else if (event == 'state'){
-        transitionTo('main');
+        if (!isVisible('main-panel')) {
+            transitionTo('main');    
+        }
         moveBarIndicatorTo((val+1)*50);
         renderThreshold((thresh+1)*50);
 //            changeContainerVisibility('person', 'show');
@@ -85,16 +87,15 @@ function changeLabel(label) {
 
 function changeContainerVisibility(name, action) {
     var id = '#' + name + '-container';
-    if (action == 'show' && !isVisible(name)) {
+    if (action == 'show' && !isVisible(name+'-container')) {
         $(id).fadeIn(300);
-    } else if (action == 'hide' && isVisible(name)) {
+    } else if (action == 'hide' && isVisible(name+'-container')) {
         $(id).fadeOut(300);
     }
 }
 
 function isVisible(name) {
-    var id = '#' + name + '-container';
-    return $(id).css('display') != 'none';
+    return $('#'+name).css('display') != 'none';
 }
 
 function startTraining(num) {
