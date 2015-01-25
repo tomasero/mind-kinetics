@@ -67,12 +67,12 @@ function armUp(dir) {
         $(arm).addClass('move-arm-left');
         setTimeout( function () {
             $(arm).removeClass('move-arm-left');
-        }, 2000);
+        }, 4000);
     } else if (dir == 'right') {
         $(arm).addClass('move-arm-right');
         setTimeout( function () {
             $(arm).removeClass('move-arm-right');
-        }, 2000);
+        }, 4000);
     }
 }
 

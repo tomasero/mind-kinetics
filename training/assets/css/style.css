@@ -155,9 +155,9 @@ body {
     animation: move-arm-left 1s ease-in-out forwards;
     -webkit-animation: move-arm-left 1s ease-in-out forwards;
     -moz-animation: move-arm-left 1s ease-in-out forwards;  
-    animation-iteration-count: 3;
-    -webkit-animation-iteration-count: 3;
-    -moz-animation-iteration-count: 3;
+    animation-iteration-count: 4;
+    -webkit-animation-iteration-count: 4;
+    -moz-animation-iteration-count: 4;
 }
 
 @keyframes move-arm-left {
@@ -194,9 +194,9 @@ body {
     animation: move-arm-right 1s ease-in-out forwards;
     -webkit-animation: move-arm-right 1s ease-in-out forwards;
     -moz-animation: move-arm-right 1s ease-in-out forwards;  
-    animation-iteration-count: 3;
-    -webkit-animation-iteration-count: 3;
-    -moz-animation-iteration-count: 3;
+    animation-iteration-count: 4;
+    -webkit-animation-iteration-count: 4;
+    -moz-animation-iteration-count: 4;
 }
 
 @keyframes move-arm-right {
