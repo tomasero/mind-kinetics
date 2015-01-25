@@ -39,6 +39,21 @@ def initialize_board(port, baud):
     board = OpenBCIBoard(port, baud)
     return board
 
+def find_port():
+    import platform, glob
+
+    s = platform.system()
+    if s == 'Linux':
+        p = glob.glob('/dev/ttyACM*')
+        
+    elif s == 'Darwin':
+        p = glob.glob('/dev/tty.usbmodemfd*')
+
+    if len(p) >= 1:
+        return p[0]
+    else:
+        return None
+
 class MIOnline():
 
     def __init__(self, port='/dev/ttyUSB0', baud=115200):
@@ -85,6 +100,16 @@ class MIOnline():
 
         self.curr_event = None
 
+        self.arm_port = find_port()
+        if self.arm_port:
+            print('found arm on port {0}'.format(self.arm_port))
+            self.arm = serial.Serial(self.arm_port, 115200);
+        else:
+            print('did not find arm')
+            self.arm = None
+
+        self.running_arm = False
+
     def stop(self):
         # resolve files and stuff
         self.board.should_stream = False
@@ -117,13 +142,20 @@ class MIOnline():
         else:
             s = 0
 
-        if time.time() > self.start_trial + 1 and not self.pause_now:
+        if time.time() > self.start_trial + 1 and (not self.pause_now) and (not self.running_arm):
             if s == self.current_class:
                 self.good_times += 1
             self.total_times += 1
 
         if not self.pause_now:
             self.send_it('state', out[-1][0])
+
+        if self.running_arm and self.arm:
+            if s == 1:
+                self.arm.write('a')
+            elif s == -1:
+                self.arm.write('A')
+            
 
     def background_classify(self):
         while self.classify_loop:
@@ -177,9 +209,9 @@ class MIOnline():
         t0 = time.time()
         t = t0
         while t - t0 < wait_time:
-            if self.curr_event == 'stop':
+            if self.curr_event != 'start':
                 return True
-            time.sleep(0.01)
+            time.sleep(0.05)
             t = time.time()
         return False
     
@@ -212,7 +244,7 @@ class MIOnline():
             
             # time.sleep(self.trial_interval)
             if self.check_wait(self.trial_interval):
-                return
+                break
 
             accuracy = None
             
@@ -239,9 +271,18 @@ class MIOnline():
 
                 # time.sleep(self.pause_interval)
                 if self.check_wait(self.pause_interval):
-                    return
+                    break
 
+        self.pause_now = True
 
+    def play_trials(self):
+        self.pause_now = False
+        self.running_arm = True
+        while self.curr_event == 'play':
+            time.sleep(0.1)
+        self.running_arm = False
+        self.pause_now = True
+                
     def update_commands(self):
         print('updating commands...')
         while True:
@@ -255,6 +296,8 @@ class MIOnline():
         while True:
             if self.curr_event == 'start':
                 self.run_trials()
+            elif self.curr_event == 'play':
+                self.play_trials()
             time.sleep(0.5)
 
     def start(self):

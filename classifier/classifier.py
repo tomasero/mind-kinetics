@@ -2,7 +2,7 @@
 
 import numpy as np
 import mdp
-import Oger
+# import Oger
 from sklearn import neighbors, datasets
 from sklearn.pipeline import Pipeline
 import pylab as plt
@@ -34,10 +34,10 @@ var = LogVarianceWindow(box_width=300)
 embed = mdp.nodes.TimeDelayNode(time_frames=10, gap=1)
 fda = mdp.nodes.FDANode(output_dim=2)
 knn = mdp.nodes.KNeighborsClassifierScikitsLearnNode(n_neighbors=10)
-reservoir = Oger.nodes.LeakyReservoirNode(output_dim=300, leak_rate=0.05,
-                                          spectral_radius=1.0,
-                                          bias_scaling=0.2)
-ridge = Oger.nodes.RidgeRegressionNode(ridge_param=10)
+# reservoir = Oger.nodes.LeakyReservoirNode(output_dim=300, leak_rate=0.05,
+#                                           spectral_radius=1.0,
+#                                           bias_scaling=0.2)
+# ridge = Oger.nodes.RidgeRegressionNode(ridge_param=10)
 # gaussian = mdp.nodes.GaussianClassifier()
 gaussian = GaussianClassifierArray()
 # gauss_proc = mdp.nodes.GaussianHMMScikitsLearnNode()

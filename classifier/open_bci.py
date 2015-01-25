@@ -1,3 +1,4 @@
+
 """
 
 Core OpenBCI object for handling connections and samples from the board.
