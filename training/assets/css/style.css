@@ -230,12 +230,10 @@ body {
 
 
 
-#start-training-button {
+#training-button {
     font-size: 24px;
 }
-#start-training-button:hover {
-    background: rgba(0,0,0,0.8);
-}
+
 
 #buttons-container {
     position: absolute;
@@ -391,14 +389,4 @@ body {
 .button:hover {
     background: #2E3233;
     color: #CAF200;
-}
-
-#stop-training-button {
-    font-size: 24px;
-}
-
-.button-disabled {
-    background: #E2E3DF !important;
-    color: #2E3233 !important;
-    cursor: wait;
 }
