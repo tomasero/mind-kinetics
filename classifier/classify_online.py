@@ -62,6 +62,7 @@ class MIOnline():
 
         self.sock_receive = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.port_receive = 10000
+        self.sock_receive.bind((self.ip, self.port_receive))
 
         self.threshold = 0.1
 
@@ -170,11 +171,24 @@ class MIOnline():
 
             self.trial, self.y, self.data = trial, y, data
 
+    def check_wait(self, wait_time):
+        t0 = time.time()
+        t = t0
+        while t - t0 < wait_time:
+            if self.curr_event == 'stop':
+                return True
+            time.sleep(0.01)
+            t = time.time()
+        return False
+    
     def run_trials(self):
         self.pause_now = True
         self.send_it('pause', dir=self.trials[0][0])
         self.current_class = 2
-        time.sleep(self.pause_interval)
+        
+        if check_wait(self.pause_interval):
+            return
+
 
         for i in range(len(self.trials)):
             x, t = self.trials[i]
@@ -193,7 +207,10 @@ class MIOnline():
             self.pause_now = False
 
             self.start_trial = time.time()
-            time.sleep(self.trial_interval)
+            
+            # time.sleep(self.trial_interval)
+            if check_wait(self.trial_interval):
+                return
 
             accuracy = None
             
@@ -218,10 +235,23 @@ class MIOnline():
             else:
                 self.send_it('pause', dir=self.trials[i+1][0])
 
-                time.sleep(self.pause_interval)
+                # time.sleep(self.pause_interval)
+                if check_wait(self.pause_interval):
+                    return
 
+
+    def update_commands(self):
+        while True:
+            data = self.sock_receive.recv(4096)
+            data = json.loads(data)
+            event = data.get('event', None)
+            self.curr_event = event
+            
     def manage_commands(self):
-        
+        while True:
+            if self.curr_event == 'start':
+                self.run_trials()
+            
 
     def start(self):
 
@@ -240,7 +270,7 @@ class MIOnline():
         self.bg_classify = threading.Thread(target=self.background_classify, args=())
         self.bg_classify.start()
 
-        self.manage_trials()
+        self.manage_commands()
 
 
 if __name__ == '__main__':
