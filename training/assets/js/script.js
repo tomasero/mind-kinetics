@@ -131,5 +131,5 @@ function setNextDirection(dir) {
 }
 function setAccuracy(panel, accuracy) {
     var id = '#' + panel + '-accuracy';
-    $(id).text(accuracy + '%');
+    $(id).text(Math.round(accuracy) + '%');
 }
