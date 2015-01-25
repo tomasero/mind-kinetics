@@ -160,7 +160,7 @@ class OpenBCIBoard(object):
     self.filtering_data = False;
 
   def warn(self, text):
-    print("Warning: ", text)
+    print("Warning: {0}".format(text))
 
   """
 

@@ -3,9 +3,11 @@
 var PORT = 33333;
 var HOST = '127.0.0.1';
 var dgram = require('dgram');
+
+var PYTHON_PORT = 10000;
+
+// receiving messages from python
 var server = dgram.createSocket('udp4');
-
-
 var socket = null;
 
 server.on('listening', function () {
@@ -21,7 +23,15 @@ server.on('message', function (message, remote) {
 server.bind(PORT, HOST);
 
 
-//node to client
+// sending messages to python
+var client = dgram.createSocket("udp4");
+
+function send_python_data(data) {
+    var message = new Buffer(data);
+    client.send(message, 0, message.length, PYTHON_PORT, HOST);
+}
+
+// serving files
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);
@@ -35,7 +45,11 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
+// sending/receiving messages to/from web app
 io.on('connection', function (soc) {
     console.log('connected');
     socket = soc;
+    socket.on('backend', function(data) {
+        send_python_data(JSON.stringify(data));
+    });
 });

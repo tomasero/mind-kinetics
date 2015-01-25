@@ -9,6 +9,6 @@ socket.on('commands', function (data) {
         threshold = dict['threshold'],
         accuracy = dict['accuracy'];
 
-    emitCommand(event, val, dir, threshold, accuracy)
+    emitCommand(event, val, dir, threshold, accuracy);
 
 });
