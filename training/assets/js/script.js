@@ -7,7 +7,6 @@ $( document ).ready( function () {
             $('#buttons-panel').fadeIn(200);   
             $('#go-home-panel').fadeIn(200); 
         }, 200);
-        transitionTo('main');
     });
     $('#intro-play-button').click( function () {
         socket.emit('backend', {'event':'play'});
