@@ -270,6 +270,9 @@ class MIOnline():
                 self.train_classifier()
                 self.good_times = 0
                 self.total_times = 0
+                
+                if self.check_wait(2):
+                    break
             else:
                 self.send_it('pause', dir=self.trials[i+1][0])
 
