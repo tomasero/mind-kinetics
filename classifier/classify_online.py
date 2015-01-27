@@ -93,17 +93,17 @@ class MIOnline():
 
         self.flow = None
 
-        # self.trial_interval = 4
-        self.trial_interval = .5
+        self.trial_interval = 4
         self.pause_interval = 2
-
+        
         self.good_times = 0
         self.total_times = 0
 
         self.curr_event = None
 
         # self.arm_port = '/dev/ttyACM1'
-        self.arm_port = None
+        self.arm_port = None # for debugging without arm
+        
         if self.arm_port:
             print('found arm on port {0}'.format(self.arm_port))
             self.arm = serial.Serial(self.arm_port, 115200);
@@ -270,9 +270,6 @@ class MIOnline():
                 self.train_classifier()
                 self.good_times = 0
                 self.total_times = 0
-                
-                if self.check_wait(2):
-                    break
             else:
                 self.send_it('pause', dir=self.trials[i+1][0])
 
