@@ -51,7 +51,7 @@ class OpenBCIBoard(object):
 
   """
 
-  def __init__(self, port=None, baud=115200, filter_data=True):
+  def __init__(self, port=None, baud=115200, filter_data=False):
     if not port:
       port = find_port()
       if not port:

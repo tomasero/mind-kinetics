@@ -301,23 +301,23 @@ class MIOnline():
 
     def signal_check(self):
         while self.curr_event == 'setup':
-            sig = self.data[-250:]
+            sig = self.data[-150:]
             b, a = signal.butter(3, (55.0/125, 65.0/125), 'bandstop')
             sig = signal.lfilter(b, a, sig, axis=0)
 
             b, a = signal.butter(3, (115.0/125, 125.0/125), 'bandstop')
             sig = signal.lfilter(b, a, sig, axis=0)
 
-            print(sig.shape)
-            # for i in range(8):
-            #     sig[:, i] = signal.medfilt(sig[:, i], 3)
+            # print(sig.shape)
+            for i in range(8):
+                sig[:, i] = signal.medfilt(sig[:, i], 3)
 
             freq, fourier = signal.welch(sig, 250.0, axis=0)
 
             z = np.any(abs(fourier) == 0, axis=0)
             out = ['0' for i in range(8)]
 
-            print(z)
+            # print(z)
             
             for i in range(8):
                 if z[i]:
@@ -325,8 +325,11 @@ class MIOnline():
                 else:
                     res = scipy.stats.linregress(freq, np.log(abs(fourier[:, i])))
                     slope, intercept, r_value, p_value, std_err = res
-                    print(slope)
-                    if slope < -0.03:
+                    
+                    # if i == 0:
+                    #     print(intercept, slope)
+                    
+                    if slope < -0.03 and intercept < -19:
                         out[i] = 1
                     else:
                         out[i] = 0
