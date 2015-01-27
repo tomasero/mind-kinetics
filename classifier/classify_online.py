@@ -144,7 +144,8 @@ class MIOnline():
         else:
             s = 0
 
-        if time.time() > self.start_trial + 1 and (not self.pause_now) and (not self.running_arm):
+        # if time.time() > self.start_trial + 1 and (not self.pause_now) and (not self.running_arm):
+        if (not self.pause_now) and (not self.running_arm):
             if s == self.current_class:
                 self.good_times += 1
             self.total_times += 1
