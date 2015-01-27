@@ -122,7 +122,7 @@ function emitCommand(event, val, dir, thresh, accuracy) {
         transitionTo(event);
     } else {
         //setup
-        setElectrodes(val);
+        setQuality(val);
     }
 }
 
@@ -193,9 +193,7 @@ function setAccuracy(panel, accuracy) {
 }
 
 function setQuality(electrodes) {
-    console.log(electrodes);
     for (var electrode in electrodes) {
-        console.log(electrode);
         setElectrodeQuality(electrode, electrodes[electrode]);    
     }
 }
