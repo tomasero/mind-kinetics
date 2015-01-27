@@ -5,16 +5,25 @@ $( document ).ready( function () {
         $('#training-button').text('Stop Training');
         setTimeout(function () {
             $('#buttons-panel').fadeIn(200);   
-            $('#go-home-panel').fadeIn(200); 
+            $('#go-home-panel').fadeIn(200);
         }, 200);
     });
     $('#intro-play-button').click( function () {
         socket.emit('backend', {'event':'play'});
         changeContainerVisibility('person', 'hide');
         changeContainerVisibility('command', 'hide');
-        $('#go-home-panel').fadeIn(200); 
+        setTimeout(function () {
+            $('#go-home-panel').fadeIn(200);
+        }, 200);
         $('#bar-container').addClass('bar-container-play');
         transitionTo('main');
+    });
+    $('#intro-setup-button').click( function () {
+        socket.emit('backend', {'event':'setup'});
+        transitionTo('setup');
+        setTimeout(function () {
+            $('#go-home-panel').fadeIn(200);
+        }, 200);
     });
     $('#training-button').click( function () {
         var data = {};
@@ -103,8 +112,7 @@ function emitCommand(event, val, dir, thresh, accuracy) {
         setAccuracy(event, accuracy*100);
         $(this).removeClass('training');
         $(this).text('Restart Training');
-    } else {
-        console.log(event);
+    } else if (event == 'classifying') {
         if (accuracy == null) {
             $('#classifying-accuracy-container').hide();
         } else {
@@ -112,6 +120,9 @@ function emitCommand(event, val, dir, thresh, accuracy) {
             setAccuracy(event, accuracy*100);
         }
         transitionTo(event);
+    } else {
+        //setup
+        setElectrodes(val);
     }
 }
 
@@ -178,5 +189,20 @@ function setAccuracy(panel, accuracy) {
         } else {
             $('#classifying-accuracy-container').show();    
         }
+    }
+}
+
+function setQuality(electrodes) {
+    for (var electrode in electrodes) {
+        setElectrodeQuality(electrode, electrodes[electrode]);    
+    }
+}
+
+function setElectrodeQuality(electrode, quality) {
+    var id = '#setup-electrode-' + electrode;
+    if (quality) {
+        $(id).addClass('setup-electrode-good');
+    } else {
+        $(id).removeClass('setup-electrode-good');
     }
 }
