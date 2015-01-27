@@ -45,7 +45,7 @@ def find_port():
     s = platform.system()
     if s == 'Linux':
         p = glob.glob('/dev/ttyACM*')
-        
+
     elif s == 'Darwin':
         p = glob.glob('/dev/tty.usbmodem*')
 
@@ -95,7 +95,7 @@ class MIOnline():
 
         self.trial_interval = 4
         self.pause_interval = 2
-        
+
         self.good_times = 0
         self.total_times = 0
 
@@ -103,7 +103,7 @@ class MIOnline():
 
         # self.arm_port = '/dev/ttyACM1'
         self.arm_port = None # for debugging without arm
-        
+
         if self.arm_port:
             print('found arm on port {0}'.format(self.arm_port))
             self.arm = serial.Serial(self.arm_port, 115200);
@@ -159,7 +159,7 @@ class MIOnline():
                 self.arm.write('a')
             elif s == -1:
                 self.arm.write('A')
-            
+
 
     def background_classify(self):
         while self.classify_loop:
@@ -218,12 +218,12 @@ class MIOnline():
             time.sleep(0.05)
             t = time.time()
         return False
-    
+
     def run_trials(self):
         self.pause_now = True
         self.send_it('pause', dir=self.trials[0][0])
         self.current_class = 2
-        
+
         if self.check_wait(self.pause_interval):
             return
 
@@ -245,24 +245,24 @@ class MIOnline():
             self.pause_now = False
 
             self.start_trial = time.time()
-            
+
             # time.sleep(self.trial_interval)
             if self.check_wait(self.trial_interval):
                 break
 
             accuracy = None
-            
+
             if self.total_times > 0:
                 accuracy = float(self.good_times) / self.total_times
                 print(accuracy, self.good_times, self.total_times)
 
             self.pause_now = True
             self.current_class = 2
-            
+
             if i == len(self.trials) - 1:
                 self.send_it('done', accuracy=accuracy)
                 break
-            
+
 
             if (i+1) % 6 == 0:
                 self.send_it('classifying', dir=self.trials[i+1][0],
@@ -286,7 +286,7 @@ class MIOnline():
             time.sleep(0.1)
         self.running_arm = False
         self.pause_now = True
-                
+
     def update_commands(self):
         print('updating commands...')
         while True:
@@ -295,14 +295,51 @@ class MIOnline():
             data = json.loads(data)
             event = data.get('event', None)
             self.curr_event = event
+
+    def signal_check(self):
+        while self.curr_event == 'setup':
+            sig = self.data[-100:]
+            b, a = signal.butter(3, (55.0/125, 65.0/125), 'bandstop')
+            sig = signal.lfilter(b, a, sig)
+
+            b, a = signal.butter(3, (115.0/125, 125.0/125), 'bandstop')
+            sig = signal.lfilter(b, a, sig)
+
+            sig = signal.medfilt(sig, 3)
+
+            freq, fourier = signal.welch(sig, 250.0)
+
+            z = np.any(abs(fourier) == 0, axis=0)
+            out = np.zeros(8, dtype='bool')
+
+            for i in range(8):
+                if z[i] == 0:
+                    out[i] = False
+                else:
+                    res = scipy.stats.linregress(freq, np.log(abs(fourier[:, i])))
+                    slope, intercept, r_value, p_value, std_err = res
+                    if slope < -0.03:
+                        out[i] = True
+                    else:
+                        out[i] = False
+
+            val = json.dumps(dict(zip(range(1,9), out)))
+            self.send_it('setup', val=val)
+
+            time.sleep(0.1)
+
             
+            
+
     def manage_commands(self):
         while True:
             if self.curr_event == 'start':
                 self.run_trials()
             elif self.curr_event == 'play':
                 self.play_trials()
-            time.sleep(0.5)
+            elif self.curr_event == 'setup':
+                self.signal_check()
+            time.sleep(0.2)
 
     def start(self):
 
@@ -325,7 +362,7 @@ class MIOnline():
 
         self.bg_commands = threading.Thread(target=self.update_commands, args=())
         self.bg_commands.start()
-        
+
         self.manage_commands()
 
 
