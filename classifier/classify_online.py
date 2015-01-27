@@ -13,6 +13,9 @@ import socket
 import json
 from mdp import FlowException
 
+from scipy import signal
+import scipy.stats
+
 from open_bci import *
 # from open_bci_v3 import *
 
@@ -300,28 +303,32 @@ class MIOnline():
         while self.curr_event == 'setup':
             sig = self.data[-100:]
             b, a = signal.butter(3, (55.0/125, 65.0/125), 'bandstop')
-            sig = signal.lfilter(b, a, sig)
+            sig = signal.lfilter(b, a, sig, axis=0)
 
             b, a = signal.butter(3, (115.0/125, 125.0/125), 'bandstop')
-            sig = signal.lfilter(b, a, sig)
-
-            sig = signal.medfilt(sig, 3)
-
-            freq, fourier = signal.welch(sig, 250.0)
-
-            z = np.any(abs(fourier) == 0, axis=0)
-            out = np.zeros(8, dtype='bool')
+            sig = signal.lfilter(b, a, sig, axis=0)
 
             for i in range(8):
-                if z[i] == 0:
-                    out[i] = False
+                sig[:, i] = signal.medfilt(sig[:, i], 3)
+
+            freq, fourier = signal.welch(sig, 250.0, axis=0)
+
+            z = np.any(abs(fourier) == 0, axis=0)
+            out = ['0' for i in range(8)]
+
+            print(z)
+            
+            for i in range(8):
+                if z[i]:
+                    out[i] = 0
                 else:
                     res = scipy.stats.linregress(freq, np.log(abs(fourier[:, i])))
                     slope, intercept, r_value, p_value, std_err = res
+                    print(slope)
                     if slope < -0.03:
-                        out[i] = True
+                        out[i] = 1
                     else:
-                        out[i] = False
+                        out[i] = 0
 
             val = json.dumps(dict(zip(range(1,9), out)))
             self.send_it('setup', val=val)
