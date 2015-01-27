@@ -100,7 +100,6 @@ function emitCommand(event, val, dir, thresh, accuracy) {
             changeLabel('baseline');
         }
     } else if (event == 'end') {
-        console.log(accuracy)
         setAccuracy(event, accuracy*100);
         $(this).removeClass('training');
         $(this).text('Restart Training');
@@ -110,9 +109,7 @@ function emitCommand(event, val, dir, thresh, accuracy) {
             $('#classifying-accuracy-container').hide();
         } else {
             $('#classifying-accuracy-container').show();
-            setAccuracy(event, accuracy);
-            console.log(event);
-            console.log(accuracy);
+            setAccuracy(event, accuracy*100);
         }
         transitionTo(event);
     }
