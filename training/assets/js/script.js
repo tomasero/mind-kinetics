@@ -193,7 +193,9 @@ function setAccuracy(panel, accuracy) {
 }
 
 function setQuality(electrodes) {
+    console.log(electrodes);
     for (var electrode in electrodes) {
+        console.log(electrode);
         setElectrodeQuality(electrode, electrodes[electrode]);    
     }
 }
