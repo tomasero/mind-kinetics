@@ -301,15 +301,16 @@ class MIOnline():
 
     def signal_check(self):
         while self.curr_event == 'setup':
-            sig = self.data[-100:]
+            sig = self.data[-250:]
             b, a = signal.butter(3, (55.0/125, 65.0/125), 'bandstop')
             sig = signal.lfilter(b, a, sig, axis=0)
 
             b, a = signal.butter(3, (115.0/125, 125.0/125), 'bandstop')
             sig = signal.lfilter(b, a, sig, axis=0)
 
-            for i in range(8):
-                sig[:, i] = signal.medfilt(sig[:, i], 3)
+            print(sig.shape)
+            # for i in range(8):
+            #     sig[:, i] = signal.medfilt(sig[:, i], 3)
 
             freq, fourier = signal.welch(sig, 250.0, axis=0)
 

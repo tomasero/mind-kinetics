@@ -122,7 +122,7 @@ function emitCommand(event, val, dir, thresh, accuracy) {
         transitionTo(event);
     } else {
         //setup
-        setQuality(val);
+        setQuality(JSON.parse(val));
     }
 }
 
@@ -200,9 +200,10 @@ function setQuality(electrodes) {
 
 function setElectrodeQuality(electrode, quality) {
     var id = '#setup-electrode-' + electrode;
-    if (quality) {
+    if (parseInt(quality)) {
         $(id).addClass('setup-electrode-good');
     } else {
         $(id).removeClass('setup-electrode-good');
     }
 }
+
