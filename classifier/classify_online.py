@@ -47,7 +47,7 @@ def find_port():
         p = glob.glob('/dev/ttyACM*')
         
     elif s == 'Darwin':
-        p = glob.glob('/dev/tty.usbmodemfd*')
+        p = glob.glob('/dev/tty.usbmodem*')
 
     if len(p) >= 1:
         return p[0]
@@ -93,7 +93,8 @@ class MIOnline():
 
         self.flow = None
 
-        self.trial_interval = 4
+        # self.trial_interval = 4
+        self.trial_interval = .5
         self.pause_interval = 2
 
         self.good_times = 0
