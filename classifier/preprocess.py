@@ -465,6 +465,34 @@ class BandpassFilter(mdp.Node):
         out = signal.lfilter(self.b, self.a, X, axis=0)
         return out
 
+class BandstopFilter(mdp.Node):
+    def __init__(self, f_low, f_high, sampling_rate, input_dim=None, N=3):
+        super(BandstopFilter, self).__init__(input_dim=input_dim)
+
+        w_low = f_low / (sampling_rate / 2.0)
+        w_high = f_high / (sampling_rate / 2.0)
+
+        self.w_low = w_low
+        self.w_high = w_high
+        self.N = N
+        self.sampling_rate = sampling_rate
+        
+        b, a = signal.butter(N, (w_low, w_high), 'bandstop')
+        self.b = b
+        self.a = a
+
+    def _set_input_dim(self, n):
+        self._input_dim = n
+        self.output_dim = n
+
+    def is_trainable(self):
+        return False
+    def is_invertible(self):
+        return False
+
+    def _execute(self, X):
+        out = signal.lfilter(self.b, self.a, X, axis=0)
+        return out    
     
     
 class MedianFilter(mdp.Node):
