@@ -61,8 +61,8 @@ class MIOnline():
 
     def __init__(self, port=None, baud=115200):
         # self.board = initialize_board(port, baud)
-        # port = find_port()
-        port = '/dev/tty.usbmodem1451'
+        port = find_port()
+        # port = '/dev/tty.usbmodem1451'
         self.board = OpenBCIBoard(port, baud)
         self.bg_thread = None
         self.bg_classify = None
@@ -100,6 +100,9 @@ class MIOnline():
         self.trial_interval = 4
         self.pause_interval = 2
 
+        # self.trial_interval = 0.5
+        # self.pause_interval = 0.5
+ 
         self.good_times = 0
         self.total_times = 0
 
@@ -194,6 +197,7 @@ class MIOnline():
         y_train = y[good] #.astype('float32')
 
         if classifier.should_preprocess:
+            classifier.train_pre_flow(sigs_train)
             sigs_train, y_train = classifier.preprocess(sigs_train, y_train)
 
         y_train = y_train.astype('float32')
@@ -320,7 +324,7 @@ class MIOnline():
             sig = signal.lfilter(b, a, sig, axis=0)
 
             # print(sig.shape)
-            for i in range(8):
+            for i in range(sig.shape[1]):
                 sig[:, i] = signal.medfilt(sig[:, i], 3)
 
             freq, fourier = signal.welch(sig, 250.0, axis=0)
@@ -338,7 +342,7 @@ class MIOnline():
                     slope, intercept, r_value, p_value, std_err = res
                     
                     # if i == 0:
-                    #     print(intercept, slope)
+                    print(intercept, slope)
                     
                     if slope < -0.03 and intercept < -19:
                         out[i] = 1

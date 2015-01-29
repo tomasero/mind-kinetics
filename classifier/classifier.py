@@ -71,7 +71,9 @@ cutoff = mdp.nodes.CutoffNode(lower_bound=-1, upper_bound=1)
 
 should_preprocess = True
 
+pre_flow = None
 pre_flow_temp = mdp.Flow([ica, artifacts])
+
 # feature extraction
 flow = mdp.Flow([knn, lowpass, cutoff])
 
@@ -122,16 +124,18 @@ def preprocess(X, y=None, box_width=125):
     
     out_X = []
     out_y = []
-    for start in range(0, X.shape[0], box_width):
+    m = int(X.shape[0] / box_width) * box_width
+    
+    for start in range(0, m, box_width):
         end = start + box_width
     
         freqs, psd = signal.welch(X[start:end,], axis=0)
         
         out_X.append(psd.flatten())
-        if y:
+        if y != None:
             out_y.append(stats.mode(y[start:end]))
 
-    if y:
+    if y != None:
         return np.array(out_X), np.array(out_y)
     else:
         return np.array(out_X)
