@@ -142,7 +142,7 @@ class MIOnline():
         # print(val, dirr)
 
     def classify(self):
-        out = self.flow(self.data[-350:])
+        out = self.flow(self.data[-500:])
         s = out[-1]
         if abs(s) > self.threshold:
             s = np.sign(s)
