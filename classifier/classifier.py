@@ -62,12 +62,18 @@ pca = mdp.nodes.PCANode(output_dim = 0.98)
 
 cutoff = mdp.nodes.CutoffNode(lower_bound=-1, upper_bound=1)
 
-flow = mdp.Flow([normalize, remove60, remove120, ica, artifacts, bandpass,
-                 embed, switchboard, csp_layer, var,
-                 knn, lowpass, cutoff])
+# flow = mdp.Flow([normalize, remove60, remove120, ica, artifacts, bandpass,
+#                  embed, switchboard, csp_layer, var,
+#                  knn, lowpass, cutoff])
 
 # flow = mdp.Flow([features, fisher,
 #                  knn, lowpass_ignore, cutoff])
+
+should_preprocess = True
+
+pre_flow_temp = mdp.Flow([ica, artifacts])
+# feature extraction
+flow = mdp.Flow([knn, lowpass, cutoff])
 
 ##I want labels from you classifiers. Yes, labels.
 for c in flow:
@@ -79,13 +85,15 @@ for c in flow:
 # xys = zip(sigs_split, y_split)
 
 def get_inp(x, xy, xys):
-    inp = [x, x, x, x, x, x,
-           x, x, xys, x,
-           xys, x, x]
+    # inp = [x, x, x, x, x, x,
+    #        x, x, xys, x,
+    #        xys, x, x]
     
     # inp = [x, xys,
     #        xys, x, xys]
 
+    inp = [xys, x, x]
+    
     return inp
 
 def get_inp_xy(X, y):
@@ -100,3 +108,31 @@ def get_flow(X, y):
     inp = get_inp_xy(X, y)
     f.train(inp)
     return f
+
+def train_pre_flow(X):
+    global pre_flow
+    f = pre_flow_temp.copy()
+    f.train(X)
+    pre_flow = f
+    return f
+
+
+def preprocess(X, y=None, box_width=125):
+    X = pre_flow(X)
+    
+    out_X = []
+    out_y = []
+    for start in range(0, X.shape[0], box_width):
+        end = start + box_width
+    
+        freqs, psd = signal.welch(X[start:end,], axis=0)
+        
+        out_X.append(psd.flatten())
+        if y:
+            out_y.append(stats.mode(y[start:end]))
+
+    if y:
+        return np.array(out_X), np.array(out_y)
+    else:
+        return np.array(out_X)
+        
