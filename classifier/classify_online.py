@@ -68,7 +68,7 @@ class MIOnline():
 
         self.data = np.array([0.0]*8)
         self.y = np.array([0])
-        self.trial = np.array([-1])
+        self.trial = np.array([2])
 
         self.should_classify = False
         self.classify_loop = True
@@ -350,6 +350,17 @@ class MIOnline():
                 self.play_trials()
             elif self.curr_event == 'setup':
                 self.signal_check()
+            elif self.curr_event == 'end':
+                self.data = np.array([0.0]*8)
+                self.y = np.array([0])
+                self.trial = np.array([2])
+            elif self.curr_event == 'reset':
+                self.flow = None
+                self.data = np.array([0.0]*8)
+                self.y = np.array([0])
+                self.trial = np.array([2])
+                self.curr_event = 'end'
+
             time.sleep(0.2)
 
     def start(self):
