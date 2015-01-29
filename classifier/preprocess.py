@@ -2,6 +2,7 @@
 
 import numpy as np
 from scipy import signal
+from scipy import stats
 import scipy
 import mdp
 
@@ -123,6 +124,7 @@ def smooth_out_y(y, box_width):
         out[start] = np.mean(y[(start-box_width+1):(start+1)])
 
     return out
+
 
 
 class EEGFeatures(mdp.Node):

@@ -100,6 +100,9 @@ class MIOnline():
         self.trial_interval = 4
         self.pause_interval = 2
 
+        # self.trial_interval = 0.5
+        # self.pause_interval = 0.5
+ 
         self.good_times = 0
         self.total_times = 0
 
@@ -142,6 +145,10 @@ class MIOnline():
         # print(val, dirr)
 
     def classify(self):
+        X = self.data[-500:]
+        if classifier.should_preprocess:
+            X = classifier.preprocess(X)
+        
         out = self.flow(self.data[-500:])
         s = out[-1]
         if abs(s) > self.threshold:
@@ -180,14 +187,21 @@ class MIOnline():
             trial, y, data = self.trial, self.y, self.data
             test = trial.shape[0] == y.shape[0] and y.shape[0] == data.shape[0]
 
+            
         # last 6 trials (3 trials per class)
         n_back = 6
         min_trial = max(0, self.current_trial - (n_back - 1))
 
         good = np.logical_and(y != 2, trial >= min_trial)
         sigs_train = data[good]
-        y_train = y[good].astype('float32')
+        y_train = y[good] #.astype('float32')
 
+        if classifier.should_preprocess:
+            classifier.train_pre_flow(sigs_train)
+            sigs_train, y_train = classifier.preprocess(sigs_train, y_train)
+
+        y_train = y_train.astype('float32')
+        
         # print(self.data.shape, self.y.shape, self.trial.shape)
 
         # inp = classifier.get_inp_xy(sigs_train, y_train)
@@ -311,7 +325,7 @@ class MIOnline():
             sig = signal.lfilter(b, a, sig, axis=0)
 
             # print(sig.shape)
-            for i in range(8):
+            for i in range(sig.shape[1]):
                 sig[:, i] = signal.medfilt(sig[:, i], 3)
 
             freq, fourier = signal.welch(sig, 250.0, axis=0)
@@ -330,6 +344,7 @@ class MIOnline():
                     
                     # if i == 0:
                     print(i, intercept, slope)
+
                     
                     if slope < -0.03 and intercept < -19:
                     #if slope < -0.013 and slope > -0.025 and intercept < -41:
