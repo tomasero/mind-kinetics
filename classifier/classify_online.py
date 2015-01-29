@@ -106,7 +106,7 @@ class MIOnline():
         self.curr_event = None
 
         # self.arm_port = '/dev/ttyACM1'
-        # self.arm_port = None # for debugging without arm
+        #self.arm_port = None # for debugging without arm
         self.arm_port = '/dev/tty.usbmodem1451'
         if self.arm_port:
             print('found arm on port {0}'.format(self.arm_port))
@@ -206,6 +206,7 @@ class MIOnline():
         t = time.time()
         sample = sample.channels
         # sample = sample.channel_data
+        # print(sample)
         if not np.any(np.isnan(sample)):
             trial = np.append(self.trial, self.current_trial)
             y = np.append(self.y, self.current_class)
@@ -328,9 +329,10 @@ class MIOnline():
                     slope, intercept, r_value, p_value, std_err = res
                     
                     # if i == 0:
-                    #     print(intercept, slope)
+                    print(i, intercept, slope)
                     
                     if slope < -0.03 and intercept < -19:
+                    #if slope < -0.013 and slope > -0.025 and intercept < -41:
                         out[i] = 1
                     else:
                         out[i] = 0

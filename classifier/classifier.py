@@ -62,7 +62,7 @@ pca = mdp.nodes.PCANode(output_dim = 0.98)
 
 cutoff = mdp.nodes.CutoffNode(lower_bound=-1, upper_bound=1)
 
-flow = mdp.Flow([normalize, remove60, remove120, ica, artifacts, bandpass,
+flow = mdp.Flow([ica, artifacts, bandpass,
                  embed, switchboard, csp_layer, var,
                  knn, lowpass, cutoff])
 
@@ -79,7 +79,7 @@ for c in flow:
 # xys = zip(sigs_split, y_split)
 
 def get_inp(x, xy, xys):
-    inp = [x, x, x, x, x, x,
+    inp = [ x, x, x,
            x, x, xys, x,
            xys, x, x]
     
