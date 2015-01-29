@@ -1,4 +1,8 @@
 $( document ).ready( function () {
+    socket.emit('backend', {'event':'stop'});
+    setTimeout( function () {
+        transitionTo('intro');
+    }, 100);
     $('#intro-train-button').click( function () {
         socket.emit('backend', {'event':'start'});
         $('#training-button').addClass('training');
@@ -24,6 +28,9 @@ $( document ).ready( function () {
         setTimeout(function () {
             $('#go-home-panel').fadeIn(200);
         }, 200);
+    });
+    $('#intro-reset-button').click( function () {
+        socket.emit('backend', {'event':'reset'});
     });
     $('#training-button').click( function () {
         var data = {};

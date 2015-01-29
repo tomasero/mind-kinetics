@@ -240,7 +240,7 @@ body {
     position: absolute;
     width: 100%;
     text-align: center;
-    bottom: 20px;
+    bottom: 40px;
     font-weight: 300;
     display: none;
 }
@@ -293,7 +293,7 @@ body {
 
 #command-container {
     position: absolute;
-    top: 0px;
+    top: 20px;
     width: 100%;
     z-index: 999;
 }
@@ -369,9 +369,7 @@ body {
     margin-top: calc(-202px/2);
 }
 
-#intro-panel {
-    display: block;
-}
+
 
 .button {
     border-radius: 3px;
