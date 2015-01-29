@@ -38,7 +38,7 @@ switchboard = mdp.hinet.Switchboard(input_dim=n_sigs, connections=range(n_sigs) 
 var = LogVarianceWindow(box_width=300)
 embed = mdp.nodes.TimeDelayNode(time_frames=10, gap=1)
 fda = mdp.nodes.FDANode(output_dim=2)
-knn = mdp.nodes.KNeighborsClassifierScikitsLearnNode(n_neighbors=10)
+knn = mdp.nodes.KNeighborsClassifierScikitsLearnNode(n_neighbors=1)
 # reservoir = Oger.nodes.LeakyReservoirNode(output_dim=300, leak_rate=0.05,
 #                                           spectral_radius=1.0,
 #                                           bias_scaling=0.2)
@@ -53,12 +53,12 @@ medfilt = MedianFilter(3)
 # classify = mdp.nodes.LibSVMClassifier()
 # classify = Oger.nodes.RidgeRegressionNode(ridge_param=0.01)
 lowpass = LowpassFilter(4, 0.003)
-lowpass2 = LowpassFilter(3, 0.005)
+lowpass2 = LowpassFilter(3, 0.5)
 lowpass_ignore = LowpassFilter(4, 0.003, ignore=250)
 lowpass2_ignore = LowpassFilter(4, 0.2, ignore=250)
 
 
-pca = mdp.nodes.PCANode(output_dim = 0.98)
+pca = mdp.nodes.PCANode(output_dim = 0.99)
 
 cutoff = mdp.nodes.CutoffNode(lower_bound=-1, upper_bound=1)
 
@@ -75,7 +75,7 @@ pre_flow = None
 pre_flow_temp = mdp.Flow([ica, artifacts])
 
 # feature extraction
-flow = mdp.Flow([knn, lowpass, cutoff])
+flow = mdp.Flow([pca, knn, lowpass2, cutoff])
 
 ##I want labels from you classifiers. Yes, labels.
 for c in flow:
@@ -94,7 +94,7 @@ def get_inp(x, xy, xys):
     # inp = [x, xys,
     #        xys, x, xys]
 
-    inp = [xys, x, x]
+    inp = [x, xys, x, x]
     
     return inp
 
@@ -133,7 +133,7 @@ def preprocess(X, y=None, box_width=125):
         
         out_X.append(psd.flatten())
         if y != None:
-            out_y.append(stats.mode(y[start:end]))
+            out_y.append(stats.mode(y[start:end])[0][0])
 
     if y != None:
         return np.array(out_X), np.array(out_y)

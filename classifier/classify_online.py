@@ -109,8 +109,8 @@ class MIOnline():
         self.curr_event = None
 
         # self.arm_port = '/dev/ttyACM1'
-        #self.arm_port = None # for debugging without arm
-        self.arm_port = '/dev/tty.usbmodem1451'
+        self.arm_port = None # for debugging without arm
+        # self.arm_port = '/dev/tty.usbmodem1451'
         if self.arm_port:
             print('found arm on port {0}'.format(self.arm_port))
             self.arm = serial.Serial(self.arm_port, 115200);
@@ -145,11 +145,14 @@ class MIOnline():
         # print(val, dirr)
 
     def classify(self):
+        #print(X.shape)
         X = self.data[-500:]
         if classifier.should_preprocess:
             X = classifier.preprocess(X)
+            print(X.shape)
+
         
-        out = self.flow(self.data[-500:])
+        out = self.flow(X)
         s = out[-1]
         if abs(s) > self.threshold:
             s = np.sign(s)
@@ -189,7 +192,7 @@ class MIOnline():
 
             
         # last 6 trials (3 trials per class)
-        n_back = 6
+        n_back = 12
         min_trial = max(0, self.current_trial - (n_back - 1))
 
         good = np.logical_and(y != 2, trial >= min_trial)
@@ -199,6 +202,8 @@ class MIOnline():
         if classifier.should_preprocess:
             classifier.train_pre_flow(sigs_train)
             sigs_train, y_train = classifier.preprocess(sigs_train, y_train)
+            print(sigs_train.shape, y_train.shape)
+            print(list(y_train))
 
         y_train = y_train.astype('float32')
         
@@ -346,7 +351,7 @@ class MIOnline():
                     print(i, intercept, slope)
 
                     
-                    if slope < -0.03 and intercept < -19:
+                    if slope < -0.025 and intercept < -19:
                     #if slope < -0.013 and slope > -0.025 and intercept < -41:
                         out[i] = 1
                     else:
