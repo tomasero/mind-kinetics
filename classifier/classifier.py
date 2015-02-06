@@ -18,7 +18,7 @@ normalize = mdp.nodes.NormalizeNode()
 remove60 = BandstopFilter(55, 65, sampling_rate=250)
 remove120 = BandstopFilter(115, 125, sampling_rate=250)
 
-ica = mdp.nodes.FastICANode(g='tanh')
+ica = mdp.nodes.FastICANode()
 artifacts = RemoveArtifacts(remove_electricity=False)
 bandpass = BandpassFilter(7, 30, sampling_rate=250)
 
@@ -50,6 +50,7 @@ gaussian = GaussianClassifierArray()
 medfilt = MedianFilter(3)
 # classify = mdp.nodes.KNeighborsRegressorScikitsLearnNode(n_neighbors=1)
 svc = mdp.nodes.SVCScikitsLearnNode()
+svm = mdp.nodes.SVRScikitsLearnNode()
 # classify = mdp.nodes.LibSVMClassifier()
 # classify = Oger.nodes.RidgeRegressionNode(ridge_param=0.01)
 lowpass = LowpassFilter(4, 0.003)
@@ -62,14 +63,14 @@ pca = mdp.nodes.PCANode(output_dim = 0.98)
 
 cutoff = mdp.nodes.CutoffNode(lower_bound=-1, upper_bound=1)
 
-# flow = mdp.Flow([ica, artifacts, bandpass,
-#                  embed, switchboard, csp_layer, var,
-#                  knn, lowpass, cutoff])
+flow = mdp.Flow([ica, artifacts, bandpass,
+                 embed, switchboard, csp_layer, var,
+                 knn, lowpass, cutoff])
 
 # flow = mdp.Flow([features, fisher,
 #                  knn, lowpass_ignore, cutoff])
 
-should_preprocess = True
+should_preprocess = False
 
 pre_flow = None
 # pre_flow_temp = mdp.Flow([remove60, remove120, ica, artifacts])
@@ -77,7 +78,7 @@ pre_flow_temp = mdp.Flow([ica, artifacts])
 
 # feature extraction
 
-flow = mdp.Flow([svc, lowpass, cutoff])
+# flow = mdp.Flow([svm, lowpass, cutoff])
 # flow = mdp.Flow([pca, knn, lowpass2, cutoff])
 
 ##I want labels from you classifiers. Yes, labels.
@@ -90,14 +91,14 @@ for c in flow:
 # xys = zip(sigs_split, y_split)
 
 def get_inp(x, xy, xys):
-    # inp = [x, x, x,
-    #        x, x, xys, x,
-    #        xys, x, x]
+    inp = [x, x, x,
+           x, x, xys, x,
+           xys, x, x]
     
     # inp = [x, xys,
     #        xys, x, xys]
 
-    inp = [xys, x, x]
+    # inp = [xys, x, x]
     
     return inp
 
