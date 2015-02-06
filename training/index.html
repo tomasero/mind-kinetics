@@ -17,6 +17,9 @@
                     <div id="intro-setup-button" class="button">
                         Setup
                     </div>
+                    <div id="intro-learn-button" class="button">
+                        Learn
+                    </div>
                     <div id="intro-train-button" class="button">
                         Train
                     </div>
@@ -106,6 +109,42 @@
                         <div id="setup-electrode-6" class="setup-electrode"></div>
                         <div id="setup-electrode-7" class="setup-electrode"></div>
                         <div id="setup-electrode-8" class="setup-electrode"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="learn-panel" class="panel">
+            <div class="panel-title" id="learn-title">Learn</div>
+            <div class="panel-subtitle" id="learn-subtitle"> to modulate your brain waves</div>
+            <div id="learn-container">
+                <div id="learn-menu">
+                    <div class="learn-menu-item learn-menu-item-active">Instructions</div>
+                    <div class="learn-menu-item">Science</div>
+                    <div id="learn-menu-item-indicator"></div>
+                </div>
+                <div id="learn-tab-container">
+                    <div class="learn-tab" id="learn-tab-science">
+                        <p class="learn-paragraph">
+                        Our brain rewires everyday. By exploiting this neural plasticity, we can achieve long-term structural and functional changes. In other words, we are capable of learning abstract skills based on motor-imagery to extend our output streams, enabling us to manipulate technology just with thought.<p>
+                        <p class="learn-paragraph">When we move our left hand, a particular place in the right sensorymotor cortex is activated in our brain. This is known as lateralization of motor activity. When we <b>think</b> about moving our hand, some of the pathways in the brain are activated as if we were actually performing the physical movement. The mental recitation of a motor movement is called motor imagery.</p>
+                        <p class="learn-paragraph">Information is transferred in the brain through electric potentials. Using electroencephalography (EEG), we can measure such activity. Because of the nature of EEG, there is a bunch of noise and unnecessary information. Thus, we use signal processing to filter unwanted features and extract a certain range of frequencies. These processed signals are then fed to a machine learning algorithm which learns how to classify when a user is thinking left, right, or baseline. Once the algorithm has learned how to differentiate between these three mind-states, it acts as a translator from motor-imagery to commands for any electronic device.</p>
+                        </p>
+                    </div>
+                    <div class="learn-tab" id="learn-tab-instructions">
+                        <p class="learn-paragraph"><b>Commands</b><br>You will receive 3 commands: left, right and baseline.</p>
+                        <div class="learn-paragraph-photo">
+                            <img class="photo" src="assets/img/left.jpg"/>
+                        </div>
+                        <div class="learn-paragraph-photo">
+                            <img src="assets/img/baseline.jpg"/>
+                        </div>
+                        <div class="learn-paragraph-photo">
+                            <img src="assets/img/right.jpg"/>
+                        </div>
+                        <p class="learn-paragraph">Feel the arm moving up and down.</p>
+                        <p class="learn-paragraph"><b>Real-time feedback</b><br>
+                            After the first trial, you will receive real-time feedback as shown in the image below. The green bar will indicate what your classified brain state. 
+                        </p>
                     </div>
                 </div>
             </div>
