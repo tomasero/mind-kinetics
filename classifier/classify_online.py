@@ -111,7 +111,7 @@ class MIOnline():
 
         # self.arm_port = '/dev/ttyACM1'
         self.arm_port = None # for debugging without arm
-        # self.arm_port = '/dev/tty.usbmodem1451'
+        #self.arm_port = '/dev/tty.usbmodem1451'
         if self.arm_port:
             print('found arm on port {0}'.format(self.arm_port))
             self.arm = serial.Serial(self.arm_port, 115200);
@@ -146,11 +146,10 @@ class MIOnline():
         # print(val, dirr)
 
     def classify(self):
-        #print(X.shape)
         X = self.data[-500:]
         if classifier.should_preprocess:
             X = classifier.preprocess(X)
-            print(X.shape)
+            # print(X.shape)
 
         
         out = self.flow(X)
@@ -160,8 +159,8 @@ class MIOnline():
         else:
             s = 0
 
-        # if time.time() > self.start_trial + 1 and (not self.pause_now) and (not self.running_arm):
-        if (not self.pause_now) and (not self.running_arm):
+        if time.time() > self.start_trial + 0.5 and (not self.pause_now) and (not self.running_arm):
+        #if (not self.pause_now) and (not self.running_arm):
             if s == self.current_class:
                 self.good_times += 1
             self.total_times += 1
@@ -180,8 +179,9 @@ class MIOnline():
         while self.classify_loop:
             if len(self.data) > 50 and (not self.pause_now) and self.flow:
                 self.classify()
-            else:
                 time.sleep(0.05)
+            else:
+                time.sleep(0.1)
 
     def train_classifier(self):
 
@@ -203,8 +203,8 @@ class MIOnline():
         if classifier.should_preprocess:
             classifier.train_pre_flow(sigs_train)
             sigs_train, y_train = classifier.preprocess(sigs_train, y_train)
-            print(sigs_train.shape, y_train.shape)
-            print(list(y_train))
+            # print(sigs_train.shape, y_train.shape)
+            # print(list(y_train))
 
         y_train = y_train.astype('float32')
         
@@ -248,6 +248,9 @@ class MIOnline():
         self.pause_now = True
         self.send_it('pause', dir=self.trials[0][0])
         self.current_class = 2
+
+        self.good_times = 0
+        self.total_times = 0
 
         if self.check_wait(self.pause_interval):
             return
@@ -295,6 +298,9 @@ class MIOnline():
                 self.train_classifier()
                 self.good_times = 0
                 self.total_times = 0
+
+                if self.check_wait(self.pause_interval):
+                    break
             else:
                 self.send_it('pause', dir=self.trials[i+1][0])
 
@@ -384,6 +390,9 @@ class MIOnline():
                 self.y = np.array([0])
                 self.trial = np.array([2])
                 self.curr_event = 'end'
+                self.good_times = 0
+                self.total_times = 0
+
 
             time.sleep(0.2)
 

@@ -3,6 +3,14 @@ $( document ).ready( function () {
     setTimeout( function () {
         transitionTo('intro');
     }, 100);
+    $('#intro-learn-button').click( function () {
+        transitionTo('learn');
+        setTimeout( function () {
+            moveLearnMenuItemActive();
+            $('#learn-tab-instructions').fadeIn(300);
+            $('#go-home-panel').fadeIn(200);
+        }, 200);
+    });
     $('#intro-train-button').click( function () {
         socket.emit('backend', {'event':'start'});
         $('#training-button').addClass('training');
@@ -54,6 +62,16 @@ $( document ).ready( function () {
             changeContainerVisibility('command', 'show');
             $('#bar-container').removeClass('bar-container-play');
         }, 200);
+    });
+    $('.learn-menu-item').click( function () {
+        $('.learn-menu-item').removeClass('learn-menu-item-active');
+        $(this).addClass('learn-menu-item-active');
+        var tab = $(this).text().toLowerCase();
+        $('.learn-tab').fadeOut(300);
+        setTimeout( function () {
+            $('#learn-tab-' + tab).fadeIn(300);    
+        }, 300);
+        moveLearnMenuItemActive();    
     });
 });
 
@@ -212,5 +230,10 @@ function setElectrodeQuality(electrode, quality) {
     } else {
         $(id).removeClass('setup-electrode-good');
     }
+}
+
+function moveLearnMenuItemActive() {
+    var left = $('.learn-menu-item-active').offset().left - $('#learn-container').offset().left;
+    $('#learn-menu-item-indicator').css({'margin-left':left+'px'});
 }
 

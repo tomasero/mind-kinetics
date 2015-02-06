@@ -38,7 +38,7 @@ switchboard = mdp.hinet.Switchboard(input_dim=n_sigs, connections=range(n_sigs) 
 var = LogVarianceWindow(box_width=300)
 embed = mdp.nodes.TimeDelayNode(time_frames=10, gap=1)
 fda = mdp.nodes.FDANode(output_dim=2)
-knn = mdp.nodes.KNeighborsClassifierScikitsLearnNode(n_neighbors=1)
+knn = mdp.nodes.KNeighborsClassifierScikitsLearnNode(n_neighbors=10)
 # reservoir = Oger.nodes.LeakyReservoirNode(output_dim=300, leak_rate=0.05,
 #                                           spectral_radius=1.0,
 #                                           bias_scaling=0.2)
@@ -53,30 +53,30 @@ svc = mdp.nodes.SVCScikitsLearnNode()
 # classify = mdp.nodes.LibSVMClassifier()
 # classify = Oger.nodes.RidgeRegressionNode(ridge_param=0.01)
 lowpass = LowpassFilter(4, 0.003)
-lowpass2 = LowpassFilter(3, 0.5)
+lowpass2 = LowpassFilter(3, 0.3)
 lowpass_ignore = LowpassFilter(4, 0.003, ignore=250)
 lowpass2_ignore = LowpassFilter(4, 0.2, ignore=250)
 
 
-pca = mdp.nodes.PCANode(output_dim = 0.99)
+pca = mdp.nodes.PCANode(output_dim = 0.98)
 
 cutoff = mdp.nodes.CutoffNode(lower_bound=-1, upper_bound=1)
 
-# flow = mdp.Flow([normalize, remove60, remove120, ica, artifacts, bandpass,
-#                  embed, switchboard, csp_layer, var,
-#                  knn, lowpass, cutoff])
+flow = mdp.Flow([ica, artifacts, bandpass,
+                 embed, switchboard, csp_layer, var,
+                 knn, lowpass, cutoff])
 
 # flow = mdp.Flow([features, fisher,
 #                  knn, lowpass_ignore, cutoff])
 
-should_preprocess = True
+should_preprocess = False
 
 pre_flow = None
 pre_flow_temp = mdp.Flow([remove60, remove120, ica, artifacts])
 
 # feature extraction
 
-flow = mdp.Flow([svc, lowpass, cutoff])
+#flow = mdp.Flow([svc, lowpass, cutoff])
 # flow = mdp.Flow([pca, knn, lowpass2, cutoff])
 
 ##I want labels from you classifiers. Yes, labels.
@@ -89,14 +89,14 @@ for c in flow:
 # xys = zip(sigs_split, y_split)
 
 def get_inp(x, xy, xys):
-    # inp = [x, x, x, x, x, x,
-    #        x, x, xys, x,
-    #        xys, x, x]
+    inp = [x, x, x,
+           x, x, xys, x,
+           xys, x, x]
     
     # inp = [x, xys,
     #        xys, x, xys]
 
-    inp = [x, xys, x, x]
+    # inp = [xys, x, x]
     
     return inp
 
@@ -121,15 +121,17 @@ def train_pre_flow(X):
     return f
 
 
-def preprocess(X, y=None, box_width=125):
+def preprocess(X, y=None, box_width=256, overlap=32):
     X = pre_flow(X)
     
     out_X = []
     out_y = []
     m = int(X.shape[0] / box_width) * box_width
     
-    for start in range(0, m, box_width):
+    for start in range(0, m, overlap):
         end = start + box_width
+        if end >= len(X):
+            break
     
         freqs, psd = signal.welch(X[start:end,], axis=0)
         
