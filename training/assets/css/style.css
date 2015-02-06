@@ -561,3 +561,7 @@ body {
 #photo-bar {
     width: 600px;
 }
+
+#learn-tab-container {
+    overflow-y: scroll;
+}
