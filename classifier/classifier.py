@@ -49,7 +49,7 @@ gaussian = GaussianClassifierArray()
 
 medfilt = MedianFilter(3)
 # classify = mdp.nodes.KNeighborsRegressorScikitsLearnNode(n_neighbors=1)
-# classify = mdp.nodes.SVCScikitsLearnNode()
+svc = mdp.nodes.SVCScikitsLearnNode()
 # classify = mdp.nodes.LibSVMClassifier()
 # classify = Oger.nodes.RidgeRegressionNode(ridge_param=0.01)
 lowpass = LowpassFilter(4, 0.003)
@@ -72,10 +72,12 @@ flow = mdp.Flow([ica, artifacts, bandpass,
 should_preprocess = False
 
 pre_flow = None
-pre_flow_temp = mdp.Flow([ica, artifacts])
+pre_flow_temp = mdp.Flow([remove60, remove120, ica, artifacts])
 
 # feature extraction
-# flow = mdp.Flow([knn, lowpass2, cutoff])
+
+#flow = mdp.Flow([svc, lowpass, cutoff])
+# flow = mdp.Flow([pca, knn, lowpass2, cutoff])
 
 ##I want labels from you classifiers. Yes, labels.
 for c in flow:
