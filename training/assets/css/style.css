@@ -557,3 +557,11 @@ body {
     height: 400px;
     float: left;
 }
+
+#photo-bar {
+    width: 600px;
+}
+
+#learn-tab-container {
+    overflow-y: scroll;
+}
