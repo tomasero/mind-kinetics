@@ -63,7 +63,7 @@ class MIOnline():
         # self.board = initialize_board(port, baud)
         # port = find_port()
         port = '/dev/tty.usbmodem1451'
-
+        # port = '/dev/ttyACM1'
         self.board = OpenBCIBoard(port, baud)
         self.bg_thread = None
         self.bg_classify = None
