@@ -359,7 +359,7 @@ class MIOnline():
                     slope, intercept, r_value, p_value, std_err = res
                     
                     # if i == 0:
-                    print(i, intercept, slope)
+                    # print(i, intercept, slope)
 
                     
                     if slope < -0.025 and intercept < -19:
