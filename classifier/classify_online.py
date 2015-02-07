@@ -299,7 +299,9 @@ class MIOnline():
             if (i+1) % 6 == 0:
                 self.send_it('classifying', dir=self.trials[i+1][0],
                              accuracy=accuracy)
+                self.board.stop()
                 self.train_classifier()
+                self.board.start()
                 self.good_times = 0
                 self.total_times = 0
 
