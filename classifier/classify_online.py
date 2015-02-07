@@ -46,12 +46,8 @@ def find_port():
     import platform, glob
 
     s = platform.system()
-    if s == 'Linux':
-        p = glob.glob('/dev/ttyACM*')
 
-    elif s == 'Darwin':
-        p = glob.glob('/dev/tty.usbmodem*')
-
+    p = glob.glob('/dev/ttyACM*')
     if len(p) >= 1:
         return p[0]
     else:
@@ -61,9 +57,9 @@ class MIOnline():
 
     def __init__(self, port=None, baud=115200):
         # self.board = initialize_board(port, baud)
-        # port = find_port()
+        port = find_port()
         # port = '/dev/tty.usbmodem1451'
-        port = '/dev/ttyACM0'
+        #port = '/dev/ttyACM1'
 
         self.board = OpenBCIBoard(port, baud)
         self.bg_thread = None
@@ -111,8 +107,8 @@ class MIOnline():
         self.curr_event = None
 
         # self.arm_port = '/dev/ttyACM1'
-        #self.arm_port = None # for debugging without arm
-        self.arm_port = '/dev/tty.usbmodem1451'
+        self.arm_port = None # for debugging without arm
+        # self.arm_port = '/dev/tty.usbmodem1451'
         if self.arm_port:
             print('found arm on port {0}'.format(self.arm_port))
             self.arm = serial.Serial(self.arm_port, 115200);

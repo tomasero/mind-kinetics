@@ -91,14 +91,14 @@ for c in flow:
 # xys = zip(sigs_split, y_split)
 
 def get_inp(x, xy, xys):
-    inp = [x, x, x,
-           x, x, xys, x,
-           xys, x, x]
+    # inp = [x, x, x,
+    #       x, x, xys, x,
+    #       xys, x, x]
     
     # inp = [x, xys,
     #        xys, x, xys]
 
-    # inp = [xys, x, x]
+    inp = [x, xys, x, x]
     
     return inp
 
