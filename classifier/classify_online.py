@@ -223,16 +223,19 @@ class MIOnline():
 
 
     def receive_sample(self, sample):
-        t = time.time()
-        sample = sample.channels
-        # sample = sample.channel_data
-        # print(sample)
-        if not np.any(np.isnan(sample)):
-            trial = np.append(self.trial, self.current_trial)
-            y = np.append(self.y, self.current_class)
-            data = np.vstack( (self.data, sample) )
+        try:
+            t = time.time()
+            sample = sample.channels
+            # sample = sample.channel_data
+            # print(sample)
+            if not np.any(np.isnan(sample)):
+                trial = np.append(self.trial, self.current_trial)
+                y = np.append(self.y, self.current_class)
+                data = np.vstack( (self.data, sample) )
 
-            self.trial, self.y, self.data = trial, y, data
+                self.trial, self.y, self.data = trial, y, data
+        except:
+            pass
 
     def check_wait(self, wait_time):
         t0 = time.time()
