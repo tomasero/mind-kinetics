@@ -62,8 +62,9 @@ class MIOnline():
     def __init__(self, port=None, baud=115200):
         # self.board = initialize_board(port, baud)
         # port = find_port()
-        port = '/dev/tty.usbmodem1411'
-        # port = '/dev/ttyACM0'
+        # port = '/dev/tty.usbmodem1451'
+        port = '/dev/ttyACM0'
+
         self.board = OpenBCIBoard(port, baud)
         self.bg_thread = None
         self.bg_classify = None
@@ -223,16 +224,19 @@ class MIOnline():
 
 
     def receive_sample(self, sample):
-        t = time.time()
-        sample = sample.channels
-        # sample = sample.channel_data
-        # print(sample)
-        if not np.any(np.isnan(sample)):
-            trial = np.append(self.trial, self.current_trial)
-            y = np.append(self.y, self.current_class)
-            data = np.vstack( (self.data, sample) )
+        try:
+            t = time.time()
+            sample = sample.channels
+            # sample = sample.channel_data
+            # print(sample)
+            if not np.any(np.isnan(sample)):
+                trial = np.append(self.trial, self.current_trial)
+                y = np.append(self.y, self.current_class)
+                data = np.vstack( (self.data, sample) )
 
-            self.trial, self.y, self.data = trial, y, data
+                self.trial, self.y, self.data = trial, y, data
+        except:
+            pass
 
     def check_wait(self, wait_time):
         t0 = time.time()
