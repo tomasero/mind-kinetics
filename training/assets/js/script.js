@@ -92,7 +92,7 @@ function getNCommands(num) {
         tempCommands = shuffle(commands);
         outCommands = outCommands.concat(tempCommands);
     }
-    console.log(outCommands);
+    // console.log(outCommands);
     return outCommands;
 }
 
@@ -204,8 +204,8 @@ function setNextDirection(dir) {
     $('#next-dir').text(dir);
 }
 function setAccuracy(panel, accuracy) {
-    console.log('inside setAccuracy');
-    console.log(accuracy);
+    // console.log('inside setAccuracy');
+    // console.log(accuracy);
     var id = '#' + panel + '-accuracy';
     $(id).text(Math.round(accuracy) + '%');   
     if (panel == 'classifying') {
