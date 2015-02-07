@@ -16,7 +16,7 @@ server.on('listening', function () {
 });
 
 server.on('message', function (message, remote) {
-    console.log(remote.address + ':' + remote.port +' - ' + message);
+    // console.log(remote.address + ':' + remote.port +' - ' + message);
     socket.emit('commands', { data: message.toString('utf-8') });
 });
 
@@ -50,7 +50,7 @@ io.on('connection', function (soc) {
     console.log('connected');
     socket = soc;
     socket.on('backend', function(data) {
-        console.log('backend: ' + JSON.stringify(data));
+        // console.log('backend: ' + JSON.stringify(data));
         send_python_data(JSON.stringify(data));
     });
 });
