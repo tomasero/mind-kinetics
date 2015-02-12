@@ -63,14 +63,14 @@ pca = mdp.nodes.PCANode(output_dim = 0.98)
 
 cutoff = mdp.nodes.CutoffNode(lower_bound=-1, upper_bound=1)
 
-# flow = mdp.Flow([ica, artifacts, bandpass,
-#                  embed, switchboard, csp_layer, var,
-#                  knn, lowpass, cutoff])
+flow = mdp.Flow([ica, artifacts, bandpass,
+                 embed, switchboard, csp_layer, var,
+                 knn, lowpass, cutoff])
 
 # flow = mdp.Flow([features, fisher,
 #                  knn, lowpass_ignore, cutoff])
 
-should_preprocess = True
+should_preprocess = False
 
 pre_flow = None
 # pre_flow_temp = mdp.Flow([remove60, remove120, ica, artifacts])
@@ -79,7 +79,7 @@ pre_flow_temp = mdp.Flow([remove60, remove120, ica, artifacts])
 # feature extraction
 
 # flow = mdp.Flow([svm, lowpass, cutoff])
-flow = mdp.Flow([pca, knn, lowpass2, cutoff])
+# flow = mdp.Flow([pca, knn, lowpass2, cutoff])
 
 ##I want labels from you classifiers. Yes, labels.
 for c in flow:
@@ -91,14 +91,14 @@ for c in flow:
 # xys = zip(sigs_split, y_split)
 
 def get_inp(x, xy, xys):
-    # inp = [x, x, x,
-    #       x, x, xys, x,
-    #       xys, x, x]
+    inp = [x, x, x,
+          x, x, xys, x,
+          xys, x, x]
     
     # inp = [x, xys,
     #        xys, x, xys]
 
-    inp = [x, xys, x, x]
+    # inp = [x, xys, x, x]
     
     return inp
 

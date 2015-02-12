@@ -78,7 +78,7 @@ body {
 
   #person-arm-right {
     transform: rotate(30deg);
-    -webkit-transform: rotate(-30deg);
+    -webkit-transform: rotate(30deg);
     margin-left: 370px;
     transform-origin: 30px 10px;
     -webkit-transform-origin: 30px 10px;
@@ -137,7 +137,7 @@ body {
 #person-finger-2 {
     margin-top: 5px;
     transform: rotate(10deg);
-    -webkit-transform: rotate(45deg);
+    -webkit-transform: rotate(10deg);
 }
 
 #person-finger-3 {
@@ -575,8 +575,5 @@ body {
 
 #photo-bar {
     width: 600px;
-}
-
-#learn-tab-container {
-    
+    margin-top: -20px;
 }

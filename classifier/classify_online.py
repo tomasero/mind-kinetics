@@ -57,8 +57,8 @@ class MIOnline():
 
     def __init__(self, port=None, baud=115200):
         # self.board = initialize_board(port, baud)
-        port = find_port()
-        # port = '/dev/tty.usbmodem1451'
+        # port = find_port()
+        port = '/dev/tty.usbmodem1411'
         #port = '/dev/ttyACM1'
 
         self.board = OpenBCIBoard(port, baud)
@@ -107,8 +107,8 @@ class MIOnline():
         self.curr_event = None
 
         # self.arm_port = '/dev/ttyACM1'
-        self.arm_port = None # for debugging without arm
-        # self.arm_port = '/dev/tty.usbmodem1451'
+        # self.arm_port = None # for debugging without arm
+        self.arm_port = '/dev/tty.usbmodem1451'
         if self.arm_port:
             print('found arm on port {0}'.format(self.arm_port))
             self.arm = serial.Serial(self.arm_port, 115200);
@@ -295,9 +295,7 @@ class MIOnline():
             if (i+1) % 6 == 0:
                 self.send_it('classifying', dir=self.trials[i+1][0],
                              accuracy=accuracy)
-                self.board.stop()
                 self.train_classifier()
-                self.board.start()
                 self.good_times = 0
                 self.total_times = 0
 
@@ -338,6 +336,9 @@ class MIOnline():
             b, a = signal.butter(3, (115.0/125, 125.0/125), 'bandstop')
             sig = signal.lfilter(b, a, sig, axis=0)
 
+            if len(sig.shape) < 2:
+                continue
+                
             # print(sig.shape)
             for i in range(sig.shape[1]):
                 sig[:, i] = signal.medfilt(sig[:, i], 3)
