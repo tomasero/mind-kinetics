@@ -58,8 +58,9 @@ class MIOnline():
     def __init__(self, port=None, baud=115200):
         # self.board = initialize_board(port, baud)
         # port = find_port()
-        port = '/dev/tty.usbmodem1411'
+        #port = '/dev/tty.usbmodem1411'
         #port = '/dev/ttyACM1'
+        port = '/dev/ttyACM0'
 
         self.board = OpenBCIBoard(port, baud)
         self.bg_thread = None
@@ -96,7 +97,8 @@ class MIOnline():
         self.flow = None
 
         self.trial_interval = 4
-        self.pause_interval = 2
+        self.pause_interval = 2.5
+        self.pre_trial = 2
 
         # self.trial_interval = 0.5
         # self.pause_interval = 0.5
@@ -107,8 +109,8 @@ class MIOnline():
         self.curr_event = None
 
         # self.arm_port = '/dev/ttyACM1'
-        # self.arm_port = None # for debugging without arm
-        self.arm_port = '/dev/tty.usbmodem1451'
+        self.arm_port = None # for debugging without arm
+        #self.arm_port = '/dev/tty.usbmodem1451'
         if self.arm_port:
             print('found arm on port {0}'.format(self.arm_port))
             self.arm = serial.Serial(self.arm_port, 115200);
@@ -260,8 +262,6 @@ class MIOnline():
             x, t = self.trials[i]
 
             self.current_trial = i
-            self.current_class = t
-
 
             print('{0} - {1}\t({2})'.format(i, x, self.data.shape))
 
@@ -271,6 +271,11 @@ class MIOnline():
                 self.send_it('state', dir=x, val=t)
 
             self.pause_now = False
+
+            if self.check_wait(self.pre_trial):
+                break
+
+            self.current_class = t
 
             self.start_trial = time.time()
 
@@ -301,12 +306,12 @@ class MIOnline():
 
                 if self.check_wait(self.pause_interval):
                     break
-            else:
-                self.send_it('pause', dir=self.trials[i+1][0])
+
+            self.send_it('pause', dir=self.trials[i+1][0])
 
                 # time.sleep(self.pause_interval)
-                if self.check_wait(self.pause_interval):
-                    break
+            if self.check_wait(self.pause_interval):
+                break
 
         self.pause_now = True
 
@@ -358,7 +363,7 @@ class MIOnline():
                     slope, intercept, r_value, p_value, std_err = res
                     
                     # if i == 0:
-                    # print(i, intercept, slope)
+                    print(i, intercept, slope)
 
                     
                     if slope < -0.025 and intercept < -19:

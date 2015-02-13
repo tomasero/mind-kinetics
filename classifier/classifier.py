@@ -103,6 +103,7 @@ def get_inp(x, xy, xys):
     return inp
 
 def get_inp_xy(X, y):
+    y = y.astype('float32')
     yy = y[:, np.newaxis].astype('float32')
     x = [X]
     xy = [(X, yy)]

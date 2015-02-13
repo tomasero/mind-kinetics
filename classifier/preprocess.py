@@ -431,10 +431,13 @@ class LowpassFilter(mdp.Node):
     def is_invertible(self):
         return False
 
+    def _get_supported_dtypes(self):
+        return ['float32', 'float64', 'int32', 'int64']
+
     def _execute(self, X):
-        out = signal.lfilter(self.b, self.a, X[self.ignore:], axis=0)
+        out = signal.lfilter(self.b, self.a, X[self.ignore:].astype('float64'), axis=0)
         if self.ignore > 0:
-            out = np.vstack( [X[:self.ignore], out] )
+            out = np.vstack( [X[:self.ignore].astype('float64'), out] )
         return out
 
 
