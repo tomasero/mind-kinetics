@@ -58,7 +58,7 @@ class MIOnline():
     def __init__(self, port=None, baud=115200):
         # self.board = initialize_board(port, baud)
         # port = find_port()
-        port = '/dev/tty.usbmodem1411'
+        port = '/dev/tty.usbmodem1451'
         #port = '/dev/ttyACM1'
 
         self.board = OpenBCIBoard(port, baud)
@@ -95,7 +95,7 @@ class MIOnline():
 
         self.flow = None
 
-        self.trial_interval = 4
+        self.trial_interval = 6
         self.pause_interval = 2
 
         # self.trial_interval = 0.5
@@ -107,8 +107,8 @@ class MIOnline():
         self.curr_event = None
 
         # self.arm_port = '/dev/ttyACM1'
-        # self.arm_port = None # for debugging without arm
-        self.arm_port = '/dev/tty.usbmodem1451'
+        self.arm_port = None # for debugging without arm
+        # self.arm_port = '/dev/tty.usbmodem1451'
         if self.arm_port:
             print('found arm on port {0}'.format(self.arm_port))
             self.arm = serial.Serial(self.arm_port, 115200);

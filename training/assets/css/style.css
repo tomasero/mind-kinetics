@@ -35,7 +35,7 @@ body {
     top: 50%;
     margin-top: calc(-216px/2);
     left: 50%;
-    margin-left: calc(-468px/2);
+    margin-left: calc(-588px/2);
 }
 
 #person-body {
@@ -207,9 +207,9 @@ body {
     animation: move-arm-right 1s ease-in-out forwards;
     -webkit-animation: move-arm-right 1s ease-in-out forwards;
     -moz-animation: move-arm-right 1s ease-in-out forwards;  
-    animation-iteration-count: 4;
-    -webkit-animation-iteration-count: 4;
-    -moz-animation-iteration-count: 4;
+    animation-iteration-count: 6;
+    -webkit-animation-iteration-count: 6;
+    -moz-animation-iteration-count: 6;
 }
 
 @keyframes move-arm-right {
