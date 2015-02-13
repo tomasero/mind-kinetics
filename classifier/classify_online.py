@@ -110,7 +110,7 @@ class MIOnline():
 
         # self.arm_port = '/dev/ttyACM1'
         self.arm_port = None # for debugging without arm
-        #self.arm_port = '/dev/tty.usbmodem1451'
+        # self.arm_port = '/dev/tty.usbmodem1451'
         if self.arm_port:
             print('found arm on port {0}'.format(self.arm_port))
             self.arm = serial.Serial(self.arm_port, 115200);
