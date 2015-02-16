@@ -19,3 +19,5 @@ logs
 results
 tests/config.json
 node_modules
+
+*.npz
