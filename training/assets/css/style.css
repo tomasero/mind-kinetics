@@ -35,7 +35,7 @@ body {
     top: 50%;
     margin-top: calc(-216px/2);
     left: 50%;
-    margin-left: calc(-468px/2);
+    margin-left: calc(-588px/2);
 }
 
 #person-body {
@@ -65,18 +65,24 @@ body {
     margin-top: 235px;
     position: absolute;
     transition: 0.3s;
+    -webkit-transition: 0.3s;
 }
 
 #person-arm-left {
     transform: rotate(-30deg);
+    -webkit-transform: rotate(-30deg);
 /*    transform-origin: 215px 0px;*/
     transform-origin: 200px 10px;
+    -webkit-transform: rotate(-30deg);
 }
 
   #person-arm-right {
     transform: rotate(30deg);
+    -webkit-transform: rotate(30deg);
     margin-left: 370px;
     transform-origin: 30px 10px;
+    -webkit-transform-origin: 30px 10px;
+    
 }
 
 #person-neck {
@@ -117,10 +123,12 @@ body {
     margin-left: -20px;
     background: #2E3233;
     transform-origin: right;
+    -webkit-transform-origin: right;
 }
 
 #person-finger-1 {
     transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
     margin-left: -5px;
     height: 12.5px;
     width: 30px;
@@ -129,25 +137,30 @@ body {
 #person-finger-2 {
     margin-top: 5px;
     transform: rotate(10deg);
+    -webkit-transform: rotate(10deg);
 }
 
 #person-finger-3 {
     transform: rotate(0deg);
+    -webkit-transform: transform: rotate(0deg);
     margin-top: 15px;
 }
 
 #person-finger-4 {
     margin-top: 25px;
     transform: rotate(-7.5deg);
+    -webkit-transform: rotate(-7.5deg);
 }
 
 #person-finger-5 {
     margin-top: 35px;
     transform: rotate(-15deg);
+    -webkit-transform: rotate(-15deg);
 }
 
 #person-hand-right {
     transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
     margin-left: 230px;
 }
 
@@ -194,9 +207,9 @@ body {
     animation: move-arm-right 1s ease-in-out forwards;
     -webkit-animation: move-arm-right 1s ease-in-out forwards;
     -moz-animation: move-arm-right 1s ease-in-out forwards;  
-    animation-iteration-count: 4;
-    -webkit-animation-iteration-count: 4;
-    -moz-animation-iteration-count: 4;
+    animation-iteration-count: 6;
+    -webkit-animation-iteration-count: 6;
+    -moz-animation-iteration-count: 6;
 }
 
 @keyframes move-arm-right {
@@ -380,6 +393,7 @@ body {
     background: #515B5E;
     color: white;
     transition: 0.3s;
+    -webkit-transition: 0.3s;
     display: inline-block;
     font-size: 24px;
     font-weight: 300;
@@ -508,6 +522,7 @@ body {
     height: 80px;
     line-height: 80px;
     transition: 0.3s;
+    -webkit-transition: 0.3s;
 }
 .learn-menu-item:hover {
     background: rgba(202, 242, 0, .6);
@@ -560,8 +575,5 @@ body {
 
 #photo-bar {
     width: 600px;
-}
-
-#learn-tab-container {
-    
+    margin-top: -20px;
 }

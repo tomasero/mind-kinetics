@@ -48,12 +48,8 @@ def find_port():
     import platform, glob
 
     s = platform.system()
-    if s == 'Linux':
-        p = glob.glob('/dev/ttyACM*')
 
-    elif s == 'Darwin':
-        p = glob.glob('/dev/tty.usbmodem*')
-
+    p = glob.glob('/dev/ttyACM*')
     if len(p) >= 1:
         return p[0]
     else:
@@ -64,7 +60,8 @@ class MIOnline():
     def __init__(self, port=None, baud=115200):
         # self.board = initialize_board(port, baud)
         # port = find_port()
-        # port = '/dev/tty.usbmodem1451'
+        #port = '/dev/tty.usbmodem1411'
+        #port = '/dev/ttyACM1'
         port = '/dev/ttyACM0'
 
         self.board = OpenBCIBoard(port, baud)
@@ -95,14 +92,15 @@ class MIOnline():
         self.current_class = 0
 
         self.current_trial = 0
-        self.trials = generate_trials(10)
+        self.trials = generate_trials(6)
 
         self.pause_now = True
 
         self.flow = None
 
         self.trial_interval = 4
-        self.pause_interval = 2
+        self.pause_interval = 2.5
+        self.pre_trial = 2
 
         # self.trial_interval = 0.5
         # self.pause_interval = 0.5
@@ -112,9 +110,9 @@ class MIOnline():
 
         self.curr_event = None
 
-        # self.arm_port = '/dev/ttyACM1'
-        #self.arm_port = None # for debugging without arm
-        self.arm_port = '/dev/tty.usbmodem1451'
+        #self.arm_port = '/dev/ttyACM1'
+        self.arm_port = None # for debugging without arm
+        # self.arm_port = '/dev/tty.usbmodem1451'
         if self.arm_port:
             print('found arm on port {0}'.format(self.arm_port))
             self.arm = serial.Serial(self.arm_port, 115200);
@@ -168,21 +166,29 @@ class MIOnline():
                 self.good_times += 1
             self.total_times += 1
 
-        if not self.pause_now:
-            self.send_it('state', out[-1][0])
+        output = out[-1][0]
 
         if self.running_arm and self.arm:
             if s == 1:
                 self.arm.write('a')
             elif s == -1:
                 self.arm.write('A')
+        # else: # bias
+        #     if self.current_class != 2:
+        #         output += self.current_class * 0.3
+        #         output = np.clip(output, -1, 1)
+
+
+        if not self.pause_now:
+            self.send_it('state', output)
+            print('classify', output)
 
 
     def background_classify(self):
         while self.classify_loop:
             if len(self.data) > 50 and (not self.pause_now) and self.flow:
                 self.classify()
-                time.sleep(0.05)
+                #time.sleep(0.05)
             else:
                 time.sleep(0.1)
 
@@ -271,8 +277,6 @@ class MIOnline():
             x, t = self.trials[i]
 
             self.current_trial = i
-            self.current_class = t
-
 
             print('{0} - {1}\t({2})'.format(i, x, self.data.shape))
 
@@ -282,6 +286,11 @@ class MIOnline():
                 self.send_it('state', dir=x, val=t)
 
             self.pause_now = False
+
+            # if self.check_wait(self.pre_trial):
+            #     break
+
+            self.current_class = t
 
             self.start_trial = time.time()
 
@@ -306,20 +315,18 @@ class MIOnline():
             if (i+1) % 6 == 0:
                 self.send_it('classifying', dir=self.trials[i+1][0],
                              accuracy=accuracy)
-                self.board.stop()
                 self.train_classifier()
-                self.board.start()
                 self.good_times = 0
                 self.total_times = 0
 
                 if self.check_wait(self.pause_interval):
                     break
-            else:
-                self.send_it('pause', dir=self.trials[i+1][0])
+
+            self.send_it('pause', dir=self.trials[i+1][0])
 
                 # time.sleep(self.pause_interval)
-                if self.check_wait(self.pause_interval):
-                    break
+            if self.check_wait(self.pause_interval):
+                break
 
         self.save_data()
         
@@ -351,6 +358,9 @@ class MIOnline():
             b, a = signal.butter(3, (115.0/125, 125.0/125), 'bandstop')
             sig = signal.lfilter(b, a, sig, axis=0)
 
+            if len(sig.shape) < 2:
+                continue
+                
             # print(sig.shape)
             for i in range(sig.shape[1]):
                 sig[:, i] = signal.medfilt(sig[:, i], 3)
@@ -370,7 +380,7 @@ class MIOnline():
                     slope, intercept, r_value, p_value, std_err = res
                     
                     # if i == 0:
-                    # print(i, intercept, slope)
+                    print(i, intercept, slope)
 
                     
                     if slope < -0.025 and intercept < -19:
