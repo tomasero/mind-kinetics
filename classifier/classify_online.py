@@ -21,6 +21,8 @@ from open_bci import *
 
 import classifier
 
+from datetime import datetime
+
 def generate_trials(N):
     L = [("left", -1), ("right", 1), ('baseline', 0)]
 
@@ -90,7 +92,7 @@ class MIOnline():
         self.current_class = 0
 
         self.current_trial = 0
-        self.trials = generate_trials(10)
+        self.trials = generate_trials(6)
 
         self.pause_now = True
 
@@ -108,7 +110,7 @@ class MIOnline():
 
         self.curr_event = None
 
-        # self.arm_port = '/dev/ttyACM1'
+        #self.arm_port = '/dev/ttyACM1'
         self.arm_port = None # for debugging without arm
         # self.arm_port = '/dev/tty.usbmodem1451'
         if self.arm_port:
@@ -164,21 +166,29 @@ class MIOnline():
                 self.good_times += 1
             self.total_times += 1
 
-        if not self.pause_now:
-            self.send_it('state', out[-1][0])
+        output = out[-1][0]
 
         if self.running_arm and self.arm:
             if s == 1:
                 self.arm.write('a')
             elif s == -1:
                 self.arm.write('A')
+        # else: # bias
+        #     if self.current_class != 2:
+        #         output += self.current_class * 0.3
+        #         output = np.clip(output, -1, 1)
+
+
+        if not self.pause_now:
+            self.send_it('state', output)
+            print('classify', output)
 
 
     def background_classify(self):
         while self.classify_loop:
             if len(self.data) > 50 and (not self.pause_now) and self.flow:
                 self.classify()
-                time.sleep(0.05)
+                #time.sleep(0.05)
             else:
                 time.sleep(0.1)
 
@@ -272,8 +282,8 @@ class MIOnline():
 
             self.pause_now = False
 
-            if self.check_wait(self.pre_trial):
-                break
+            # if self.check_wait(self.pre_trial):
+            #     break
 
             self.current_class = t
 

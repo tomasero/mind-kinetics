@@ -38,7 +38,7 @@ switchboard = mdp.hinet.Switchboard(input_dim=n_sigs, connections=range(n_sigs) 
 var = LogVarianceWindow(box_width=300)
 embed = mdp.nodes.TimeDelayNode(time_frames=10, gap=1)
 fda = mdp.nodes.FDANode(output_dim=2)
-knn = mdp.nodes.KNeighborsClassifierScikitsLearnNode(n_neighbors=10)
+knn = mdp.nodes.KNeighborsClassifierScikitsLearnNode(n_neighbors=1)
 # reservoir = Oger.nodes.LeakyReservoirNode(output_dim=300, leak_rate=0.05,
 #                                           spectral_radius=1.0,
 #                                           bias_scaling=0.2)
@@ -70,16 +70,16 @@ flow = mdp.Flow([ica, artifacts, bandpass,
 # flow = mdp.Flow([features, fisher,
 #                  knn, lowpass_ignore, cutoff])
 
-should_preprocess = False
+should_preprocess = True
 
 pre_flow = None
 # pre_flow_temp = mdp.Flow([remove60, remove120, ica, artifacts])
-pre_flow_temp = mdp.Flow([remove60, remove120, ica, artifacts])
+pre_flow_temp = mdp.Flow([ica, artifacts])
 
 # feature extraction
 
 # flow = mdp.Flow([svm, lowpass, cutoff])
-# flow = mdp.Flow([pca, knn, lowpass2, cutoff])
+flow = mdp.Flow([knn, lowpass, cutoff])
 
 ##I want labels from you classifiers. Yes, labels.
 for c in flow:
@@ -91,14 +91,14 @@ for c in flow:
 # xys = zip(sigs_split, y_split)
 
 def get_inp(x, xy, xys):
-    inp = [x, x, x,
-          x, x, xys, x,
-          xys, x, x]
+    # inp = [x, x, x,
+    #       x, x, xys, x,
+    #       xys, x, x]
     
     # inp = [x, xys,
     #        xys, x, xys]
 
-    # inp = [x, xys, x, x]
+    inp = [xys, x, x]
     
     return inp
 
@@ -124,20 +124,31 @@ def train_pre_flow(X):
     return f
 
 
-def preprocess(X, y=None, box_width=256, overlap=32):
+def preprocess(X, y=None, box_width=256, overlap=32, pad_width=0):
     X = pre_flow(X)
     
     out_X = []
     out_y = []
     m = int(X.shape[0] / box_width) * box_width
     
+    w = np.kaiser(box_width + pad_width, 14)
+
     for start in range(0, m, overlap):
         end = start + box_width
         if end >= len(X):
             break
-    
-        freqs, psd = signal.welch(X[start:end,], axis=0)
         
+        x = X[start:end,]
+
+        if pad_width > 0:
+            x = np.vstack([x, np.zeros((pad_width, x.shape[1]))])
+
+        x = (x.T * w).T
+
+        psd = abs(np.fft.rfft(x, axis=0))
+
+        #freqs, psd = signal.welch(X[start:end,], axis=0)
+    
         out_X.append(psd.flatten())
         if y != None:
             out_y.append(stats.mode(y[start:end])[0][0])
