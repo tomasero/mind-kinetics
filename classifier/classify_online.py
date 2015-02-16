@@ -262,9 +262,16 @@ class MIOnline():
         np.savez_compressed(fname, data=self.data, y=self.y, trial=self.trial)
     
     def run_trials(self):
+
         self.pause_now = True
         self.send_it('pause', dir=self.trials[0][0])
         self.current_class = 2
+
+        # reset data
+        self.data = np.array([0.0]*8)
+        self.y = np.array([0])
+        self.trial = np.array([2])
+
 
         self.good_times = 0
         self.total_times = 0
