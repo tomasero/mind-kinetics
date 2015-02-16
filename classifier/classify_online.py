@@ -21,6 +21,8 @@ from open_bci import *
 
 import classifier
 
+from datetime import datetime
+
 def generate_trials(N):
     L = [("left", -1), ("right", 1), ('baseline', 0)]
 
@@ -248,6 +250,11 @@ class MIOnline():
             t = time.time()
         return False
 
+    def save_data(self):
+        date = datetime.now().strftime('%Y-%m-%d--%H-%M')
+        fname = 'data/' + date
+        np.savez_compressed(fname, data=self.data, y=self.y, trial=self.trial)
+    
     def run_trials(self):
         self.pause_now = True
         self.send_it('pause', dir=self.trials[0][0])
@@ -314,6 +321,8 @@ class MIOnline():
                 if self.check_wait(self.pause_interval):
                     break
 
+        self.save_data()
+        
         self.pause_now = True
 
     def play_trials(self):
