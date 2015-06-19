@@ -5,11 +5,10 @@ import mdp
 # import Oger
 from sklearn import neighbors, datasets
 from sklearn.pipeline import Pipeline
-import pylab as plt
 
 from preprocess import *
 
-import pylab as pl
+#import pylab as pl
 
 from scipy.stats.stats import pearsonr
 
